@@ -35,3 +35,4 @@ jobs:
         with:
           branch: gh-pages
           folder: _book
+          token: ${{ secrets.DEPLOY_SECRET }}
