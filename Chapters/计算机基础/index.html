@@ -1,0 +1,463 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <title>计算机基础 · iOS知识总结</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="author" content="liyb">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search-pro/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../OC/" />
+    
+    
+    <link rel="prev" href="../数据结构/" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    前言
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../数据结构/">
+            
+                <a href="../数据结构/">
+            
+                    
+                    数据结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    计算机基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../OC/">
+            
+                <a href="../OC/">
+            
+                    
+                    Objective-C
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../Swift/">
+            
+                <a href="../Swift/">
+            
+                    
+                    Swift
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../SwiftUI/">
+            
+                <a href="../SwiftUI/">
+            
+                    
+                    SwiftUI
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../Flutter/">
+            
+                <a href="../Flutter/">
+            
+                    
+                    Flutter
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../ReactNative/">
+            
+                <a href="../ReactNative/">
+            
+                    
+                    ReactNative
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            本书使用 HonKit 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >计算机基础</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="计算机基础">计算机基础</h1>
+<h2 id="设计模式">设计模式</h2>
+<ul>
+<li>是一套被反复使用、代码设计经验的总结</li>
+<li>使用设计模式的好处是：可重用代码、让代码更容易被他人理解、保证代码可靠性</li>
+<li>一般与编程语言无关，是一套比较成熟的编程思想</li>
+</ul>
+<h3 id="设计模式可以分为三大类">设计模式可以分为三大类</h3>
+<ul>
+<li>创建型模式: 对象实例化的模式，用于解耦对象的实例化过程<ul>
+<li>单例模式、工厂方法模式，等等</li>
+</ul>
+</li>
+<li>结构型模式：把类或对象结合在一起形成一个更大的结构<ul>
+<li>代理模式、适配器模式、组合模式、装饰模式，等等</li>
+</ul>
+</li>
+<li>行为型模式：类或对象之间如何交互，及划分责任和算法<ul>
+<li>观察者模式、命令模式、责任链模式，等等</li>
+</ul>
+</li>
+</ul>
+<h3 id="常用的设计模式">常用的设计模式</h3>
+<ul>
+<li>MVP<ul>
+<li>优点: view与model的解耦，交互通过presenter交互</li>
+<li>缺点: 业务增多是view与presenter接口也会越来越多</li>
+</ul>
+</li>
+<li>MVC<ul>
+<li>优点：View、Model可以重复利用，可以独立使用</li>
+<li>缺点：Controller的代码过于臃肿</li>
+</ul>
+</li>
+<li>MVVM<ul>
+<li>优点: view与数据是双向绑定，当model变化会自动同步到view</li>
+<li>缺点: 错误不好定位，双向绑定不利于view的重用</li>
+</ul>
+</li>
+</ul>
+<h2 id="网络协议">网络协议</h2>
+<h3 id="osi分层">OSI分层</h3>
+<ul>
+<li>应用层（application）：最接近终端用户的OSI层，这就意味着OSI应用层与用户之间是通过应用软件直接相互作用的。网络进程访问应用层；提供接口服务</li>
+<li>表示层（presention）：数据表现形式；特定功能的实现-比如加密模式确保原始设备上加密的数据可以在目标设备上正确地解密</li>
+<li>会话层（session）：主机间通信；对应用会话管理，同步</li>
+<li>传输层（transport）:实现端到端传输；分可靠与不可靠传输；在传输前实现错误检测与流量控制，定义端口号（标记相应的服务）</li>
+<li>网络层（network）（单位类型：报文）：数据传输；提供逻辑地址，选择路由数据包，负责在源和终点之间建立连接</li>
+<li>数据链路层（date link）（单位类型：帧）：访问介质；数据在该层封装成帧；用MAC地址作为访问媒介；具有错误检测与修正功能。</li>
+<li>物理层（physical）（单位类型：比特）：实现比特流的透明传输，物理接口，具有电气特性</li>
+</ul>
+<h3 id="tcpip分层">TCP/IP分层</h3>
+<ul>
+<li>应用层：TCP/IP协议的应用层相当于OSI模型的会话层、表示层和应用层，FTP(文件传输协议)，DNS（域名系统），HTTP协议，Telnet（网络远程访问协议）</li>
+<li>传输层：提供TCP(传输控制协议)，UDP（用户数据报协议）两个协议，主要功能是数据格式化、数据确认和丢失重传等<ul>
+<li>TCP<ul>
+<li>TCP提供IP环境下的数据可靠传输，它提供的服务包括数据流传送、可靠性、有效流控、全双工操作和多路复用。通过面向连接、端到端和可靠的数据包发送。通俗说，它是事先为所发送的数据开辟出连接好的通道，然后再进行数据发送</li>
+</ul>
+</li>
+<li>UDP<ul>
+<li>UDP则不为IP提供可靠性、流控或差错恢复功能。一般来说，TCP对应的是可靠性要求高的应用，而UDP对应的则是可靠性要求低、传输经济的应用。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>网络层：该层负责相同或不同网络中计算机之间的通信主要处理数据包和路由。数据包是网络传输的最小数据单位。通过某条传输路线将数据包传给对方。<ul>
+<li>IP协议<ul>
+<li>在IP层中，ARP协议用于将IP地址转换成物理地址</li>
+</ul>
+</li>
+<li>ICMP协议<ul>
+<li>ICMP协议用于报告差错和传送控制信息</li>
+</ul>
+</li>
+<li>IGMP协议</li>
+</ul>
+</li>
+<li>接口层：TCP/IP协议的最低一层，对实际的网络媒体的管理，包括操作系统中的设备驱动程序和计算机对应的网络接口卡</li>
+</ul>
+<h2 id="编程思想">编程思想</h2>
+<h3 id="函数式编程">函数式编程</h3>
+<ul>
+<li>函数式编程指的是数学意义上的函数,即映射关系（如：y = f(x),就是 y 和 x 的对应关系,可以理解为&quot;像函数一样的编程&quot;).它的主要思想是把运算过程尽量写成一系列嵌套的函数调用</li>
+</ul>
+<h3 id="面向对象">面向对象</h3>
+<ul>
+<li>面向对象的编程思想, 我们将要解决的一个个问题, 抽象成一个个类, 通过给类定义属性和方法, 让类帮助我们解决需要处理的问题.(即命令式编程, 给对象下一个个命令).</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../数据结构/" class="navigation navigation-prev " aria-label="Previous page: 数据结构">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../OC/" class="navigation navigation-next " aria-label="Next page: Objective-C">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"计算机基础","level":"1.3","depth":1,"next":{"title":"Objective-C","level":"1.4","depth":1,"path":"Chapters/OC/README.md","ref":"Chapters/OC/README.md","articles":[]},"previous":{"title":"数据结构","level":"1.2","depth":1,"path":"Chapters/数据结构/README.md","ref":"Chapters/数据结构/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/liyb93"},"search-pro":{},"expandable-chapters-small":{},"back-to-top-button":{},"code":{"copyButtons":true},"highlight":{},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"3.2.3","description":"iOS知识总结"},"file":{"path":"Chapters/计算机基础/README.md","mtime":"2024-03-19T08:22:22.927Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-19T08:22:33.793Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

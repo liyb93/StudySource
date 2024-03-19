@@ -1,0 +1,468 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <title>ReactNative · iOS知识总结</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="author" content="liyb">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search-pro/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="../Flutter/" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    前言
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../数据结构/">
+            
+                <a href="../数据结构/">
+            
+                    
+                    数据结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../计算机基础/">
+            
+                <a href="../计算机基础/">
+            
+                    
+                    计算机基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../OC/">
+            
+                <a href="../OC/">
+            
+                    
+                    Objective-C
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../Swift/">
+            
+                <a href="../Swift/">
+            
+                    
+                    Swift
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../SwiftUI/">
+            
+                <a href="../SwiftUI/">
+            
+                    
+                    SwiftUI
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../Flutter/">
+            
+                <a href="../Flutter/">
+            
+                    
+                    Flutter
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.8" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    ReactNative
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            本书使用 HonKit 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >ReactNative</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="react-native">React Native</h1>
+<ul>
+<li>React Native是一个JavaScript框架，由Facebook开发，以满足日益增长的移动应用开发的需求。它是开源的，基于JavaScript的。它被设计为用可重复使用的组件构建本地移动应用程序。它使用了大量的ReactJS组件，但在不同的设备上以原生方式实现它们。它调用Objective-C（用于iOS）和Java（用于Android）中的本地渲染API。</li>
+<li>ReactJS也是由Facebook开发的。它是一个开源的JavaScript库，用于为移动和网络应用开发响应式的用户界面。它有一个可重复使用的组件库，旨在帮助开发者为他们的应用程序建立基础。</li>
+</ul>
+<h2 id="react-native与reactjs有什么不同？">React Native与ReactJS有什么不同？</h2>
+<ul>
+<li>主要区别。 - 语法。React Native和ReactJS都使用JSX，但ReactJS使用HTML标签，而React Native不使用。 - 导航。React Native使用自己的内置导航库，而ReactJS使用react-router。 - 动画。ReactJS使用CSS动画。React Native使用其动画API。 - DOM。ReactJS使用部分刷新的虚拟DOM。React Native在渲染UI组件时需要使用其本地API。 - 用法。ReactJS主要用于Web应用开发，而React Native则专注于移动应用。</li>
+</ul>
+<h2 id="什么是jsx？">什么是JSX？</h2>
+<ul>
+<li>JavaScript XML，或JSX，是React使用的一种XML/HTML模板语法。它扩展了ECMAScript，允许XML/HTML类文本与JavaScript和React代码重合。它允许我们把HTML放到JavaScript中。</li>
+</ul>
+<h2 id="什么是核心react组件，它们做什么？">什么是核心React组件，它们做什么？</h2>
+<ul>
+<li>Props。你可以使用props来传递数据给不同的React组件。Props是不可变的，这意味着props不能改变它们的值。</li>
+<li>ScrollView。ScrollView是一个滚动的容器，用来承载多个视图。你可以用它来渲染大型列表或内容。</li>
+<li>状态。你使用状态来控制组件。在React中，状态是可变的，这意味着它可以在任何时候改变值。</li>
+<li>风格。React Native不需要任何特殊的语法来进行样式设计。它使用JavaScript对象。</li>
+<li>文本。文本组件在你的应用程序中显示文本。它使用textInput来接受用户的输入。</li>
+<li>视图。视图用于构建移动应用程序的用户界面。它是一个你可以显示你的内容的地方。</li>
+</ul>
+<h2 id="什么是redux，什么时候应该使用它？">什么是Redux，什么时候应该使用它？</h2>
+<ul>
+<li>Redux是一个JavaScript应用程序的状态管理工具。它可以帮助你编写一致的应用程序，可以在不同环境下运行的应用程序，以及易于测试的应用程序。</li>
+<li>不是所有的应用程序都需要Redux。它的设计是为了帮助你确定何时出现状态变化。根据Redux的官方文档，以下是一些你想使用Redux的例子。<ul>
+<li>你的应用状态经常更新</li>
+<li>你有大量的应用状态，并且在应用的许多地方都需要它</li>
+<li>更新你的应用状态的逻辑很复杂</li>
+<li>你希望看到状态是如何随时间更新的</li>
+<li>你的应用程序有一个中等或较大的代码库，并将由多个人员进行操作</li>
+</ul>
+</li>
+</ul>
+<h2 id="什么是状态，如何使用它？">什么是状态，如何使用它？</h2>
+<ul>
+<li>在React Native中，状态处理的是可改变的数据。状态是可变的，意味着它可以在任何时候改变值。你应该在构造函数中初始化它，然后在你想改变它时调用setState。</li>
+</ul>
+<h2 id="如何调试react应用程序，你可以使用哪些工具？">如何调试React应用程序，你可以使用哪些工具？</h2>
+<h3 id="开发者菜单">开发者菜单</h3>
+<ul>
+<li>重新加载：重新加载应用程序</li>
+<li>Debug JS Remotely：打开一个JavaScript调试器</li>
+<li>启用实时重载：导致应用程序在选择 &quot;保存 &quot;后自动重新加载</li>
+<li>启用热重新加载：观察变化</li>
+<li>切换检查器：切换检查器界面，以便我们可以检查UI元素和它们的属性</li>
+<li>显示Perf Monitor：监控性能</li>
+</ul>
+<h3 id="chrome开发工具">Chrome开发工具</h3>
+<ul>
+<li>你可以使用这些DevTools来调试React Native应用程序。你需要确保它连接到同一个WiFi。如果你使用的是Windows或Linux，按 Ctrl + M+，如果你使用的是macOS，按 命令+R.在开发者菜单中，你选择 &quot;Debug JS Remotely&quot;，它将打开默认调试器。</li>
+</ul>
+<h3 id="react开发工具">React开发工具</h3>
+<ul>
+<li>要使用React的开发者工具，你必须使用桌面应用程序。这些工具允许你调试React组件和样式。</li>
+</ul>
+<h3 id="react本地调试器">React本地调试器</h3>
+<ul>
+<li>如果你在你的React应用中使用Redux，这对你来说是一个好的调试器。它是一个桌面应用，在一个应用中整合了Redux的和React的开发者工具。</li>
+</ul>
+<h3 id="react-native-cli">React Native CLI</h3>
+<ul>
+<li>使用React Native命令行界面来进行调试。</li>
+</ul>
+<h2 id="当你调用setstate时会发生什么？">当你调用SetState时会发生什么？</h2>
+<ul>
+<li>当你在React中调用SetState时，你传递给它的对象将被合并到组件的当前状态中。这就触发了一种叫做<em>调和的</em>东西。调和的目的是以最有效的方式更新用户界面。 React通过构建一个React元素树，并将其与之前的元素树进行比较来实现这一目的。这向React显示了所发生的确切变化，因此React可以在必要的地方进行更新。</li>
+</ul>
+<h2 id="描述一下虚拟dom是如何工作的。">描述一下虚拟DOM是如何工作的。</h2>
+<ul>
+<li>在React Native中，虚拟DOM是真实DOM的一个副本。它是一个节点树，列出了元素以及它们的属性、内容、和属性。每当我们的底层数据发生变化时，虚拟DOM会重新渲染用户界面。之后，其他DOM表现和虚拟DOM表现之间的差异将被计算出来，而真实DOM将被更新。</li>
+</ul>
+<h2 id="描述flexbox以及它最常用的属性。">描述Flexbox以及它最常用的属性。</h2>
+<ul>
+<li>Flexbox是一种布局模式，使元素能够在容器内协调和分配空间。它在不同的屏幕尺寸上提供了一个一致的布局。</li>
+<li>flexDirection：用于指定元素的对齐方式（垂直或水平）。</li>
+<li>justifyContent：用于决定元素在一个给定的容器内应该如何分布</li>
+<li>alignItems：用于指定一个给定的容器内的元素沿次轴的分布。</li>
+</ul>
+<h2 id="功能性组件和类组件的区别是什么？">功能性组件和类组件的区别是什么？</h2>
+<ul>
+<li>功能性组件也被称为无状态组件。功能性组件接受道具并返回HTML。它们在不使用状态的情况下给出解决方案，它们可以定义为有或没有箭头函数。</li>
+<li>类组件也被称为有状态组件。它们是ES6类，扩展了React库中的组件类。它们实现了逻辑和状态。类组件在返回HTML时需要有一个render()方法。你可以向它们传递道具，并通过this.props访问它们。</li>
+</ul>
+<h2 id="列出一些你可以优化应用程序的方法。">列出一些你可以优化应用程序的方法。</h2>
+<ul>
+<li>压缩或转换我们的原始JSON数据，而不是仅仅存储它</li>
+<li>为CPU架构制作缩小尺寸的APK文件</li>
+<li>优化本地库和状态操作的数量</li>
+<li>在列表项上使用关键属性</li>
+<li>压缩图片和其他图形元素</li>
+<li>使用Proguard来最小化应用程序的大小，并剥离我们的字节码及其依赖的部分。</li>
+</ul>
+<h2 id="在ios和android中，内存泄露的一些原因是什么，如何检测它们？">在iOS和Android中，内存泄露的一些原因是什么，如何检测它们？</h2>
+<ul>
+<li>如果在componentDidMount中添加了未发布的定时器或监听器，或者关闭范围泄漏，就会发生内存泄漏。</li>
+<li>要检测iOS的内存泄漏，你可以进入Xcode，产品，然后是配置文件。</li>
+<li>要检测Android的内存泄漏，你可以使用性能监视器。</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../Flutter/" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Flutter">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"ReactNative","level":"1.8","depth":1,"previous":{"title":"Flutter","level":"1.7","depth":1,"path":"Chapters/Flutter/README.md","ref":"Chapters/Flutter/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/liyb93"},"search-pro":{},"expandable-chapters-small":{},"back-to-top-button":{},"code":{"copyButtons":true},"highlight":{},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"3.2.3","description":"iOS知识总结"},"file":{"path":"Chapters/ReactNative/README.md","mtime":"2024-03-19T08:22:22.927Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-19T08:22:33.793Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

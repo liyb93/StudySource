@@ -1,0 +1,487 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <title>SwiftUI · iOS知识总结</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="author" content="liyb">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search-pro/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../Flutter/" />
+    
+    
+    <link rel="prev" href="../Swift/" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    前言
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../数据结构/">
+            
+                <a href="../数据结构/">
+            
+                    
+                    数据结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../计算机基础/">
+            
+                <a href="../计算机基础/">
+            
+                    
+                    计算机基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../OC/">
+            
+                <a href="../OC/">
+            
+                    
+                    Objective-C
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../Swift/">
+            
+                <a href="../Swift/">
+            
+                    
+                    Swift
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.6" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    SwiftUI
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../Flutter/">
+            
+                <a href="../Flutter/">
+            
+                    
+                    Flutter
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../ReactNative/">
+            
+                <a href="../ReactNative/">
+            
+                    
+                    ReactNative
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            本书使用 HonKit 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >SwiftUI</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="swiftui">SwiftUI</h1>
+<h2 id="描述-swiftui-中的视图">描述 SwiftUI 中的视图</h2>
+<ul>
+<li><p><code>SwiftUI</code> 中的视图是一个轻量级瞬态对象，旨在在更改其源时被扔掉。</p>
+</li>
+<li><p>这就是SwiftUI具有数据驱动的性质，<code>SwiftUI</code> 通过在必要时以高性能的方式重新计算视图主体来处理更新。开发人员不会直接处理视图刷新，而是系统处理此操作。</p>
+</li>
+<li><p>SwiftUI视图是引擎盖下的 <code>struct</code>，符合 <code>SwiftUI</code> 的 <code>View</code> 协议，以描述用户可查看的元素。</p>
+</li>
+</ul>
+<h2 id="描述-state、binding、observedobject、published和environmentobject-之间的区别">描述 <code>@State</code>、<code>@Binding</code>、<code>@ObservedObject</code>、<code>@Published</code>和<code>@EnvironmentObject</code> 之间的区别</h2>
+<ul>
+<li><p>@State</p>
+<ul>
+<li><p>属性包装器用于为应用程序中的数据创建单一真相源，该数据会随着时间的推移而变异（并适当更新视图）。</p>
+</li>
+<li><p><code>@State</code> 中的包裹值是任何东西（通常是值类型）。<code>wrappedValue</code> 存储在堆上，当它更改无效时，视点和视点此值的视图将被标记为更新。</p>
+</li>
+</ul>
+</li>
+<li><p>@Binding</p>
+<ul>
+<li><p><code>@Binding</code> 属性包装器允许存储数据的属性与显示和突变该数据的视图之间的双向连接。</p>
+</li>
+<li><p><code>wappedValue</code> 是绑定到其他东西的值（任何东西）。它从其他来源获取/设置包裹值的值。当绑定值更改时，它使标记为更新的视图无效。</p>
+</li>
+</ul>
+</li>
+<li><p>@ObservedObject 和 Published</p>
+<ul>
+<li>为了使通过 <code>@Published</code> 观察到的属性到包含类之外的类，该包含类需要继承 <code>ObservableObject</code> ，相关属性应标记为 <code>@Published</code> ——该属性合成 <code>objectWillChange</code> 发布者以宣布该值将发生变化。</li>
+</ul>
+</li>
+<li><p>@EnvironmentObject</p>
+<ul>
+<li>一个属性包装器，允许视图访问并响应自定义定义的设置和条件。</li>
+</ul>
+</li>
+</ul>
+<h2 id="描述-spacer-组件的作用">描述 <code>Spacer</code> 组件的作用</h2>
+<p><code>Spacer</code> 组件可以通过占用尽可能多的空间来撑开相邻的区域，它有以下特点：</p>
+<ul>
+<li><p>灵活的间距：</p>
+<ul>
+<li>可以使用 <code>minLength</code> 参数来控制 <code>Spacer</code> 试图占用的空间量。</li>
+<li>如果有多个 <code>Spacers</code> ，它们可以在彼此之间平均分配可用空间。</li>
+</ul>
+</li>
+<li><p>自适应布局：</p>
+<ul>
+<li><code>Spacer</code> 通过根据可用空间自动调整间距，帮助创建适应不同屏幕尺寸和方向的布局。</li>
+</ul>
+</li>
+<li><p>可访问性：</p>
+<ul>
+<li><code>Spacer</code> 不仅有助于布局设计；它还可以通过在UI元素之间创建清晰的视觉分离来促进应用程序的可访问性，这有助于用户更好地理解界面。</li>
+</ul>
+</li>
+</ul>
+<h2 id="描述-swiftui-生命周期">描述 SwiftUI 生命周期</h2>
+<ul>
+<li><p>解释 <code>SwiftUI</code> 视图与 <code>UIViewController</code> 有何不同？</p>
+<ul>
+<li>概括的来讲，所有的 <code>SwiftUI</code> 视图都是声明性的，而 <code>UIKit</code> 是命令式的。</li>
+</ul>
+</li>
+<li><p>如何在 SwiftUI 中处理视图初始化和取消初始化？</p>
+<ul>
+<li>在 <code>UIKit</code> 中，<code>deinit</code> 当视图控制器被释放时会调用该方法。在 <code>SwiftUI</code> 中，因为结构体是轻量级的，当它们超出范围时，它们会自动释放。</li>
+</ul>
+</li>
+<li><p>SwiftUI 初始化和 UIKit 有什么区别？</p>
+<ul>
+<li><code>SwiftUI</code> 视图是轻量级的，可以频繁创建和销毁。<code>SwiftUI</code> 视图的方法<code>init</code>可用于执行初始设置。</li>
+<li>当视图添加到屏幕时，会调用 <code>onAppear</code> 修饰符，当视图从屏幕上删除时，会调用 <code>onDisappear</code> 修饰符，这些修饰符可以用在所有视图上。</li>
+<li>这和 UIKit 中的 <code>viewWillAppear</code> 和 <code>viewWillDisappear</code> 效果接近，示例代码如下：</li>
+</ul>
+</li>
+</ul>
+<pre><code class="lang-scss">Text(&quot;SwiftUI <span class="hljs-number">2023</span> 面试题 by Codeun.com&quot;)     
+    <span class="hljs-selector-class">.onAppear</span> { <span class="hljs-built_in">print</span>(&quot;视图出现&quot;) }    
+    <span class="hljs-selector-class">.onDisappear</span> { <span class="hljs-built_in">print</span>(&quot;视图消失&quot;) }
+</code></pre>
+<ul>
+<li><p>SwiftUI 如何更新视图？</p>
+<ul>
+<li>每当视图依赖的某些状态发生变化时，SwiftUI 视图的主体就会重新计算和绘制，使用 <code>@Bindings</code> 、<code>@State</code> 、<code>@ObservedObjects</code> 、 <code>@EnvironmentObjects</code> 、<code>@AppStorage</code>和 <code>@SceneStorage</code>  这些属性包装器都能以不同方式影响到页面视图的更新。</li>
+</ul>
+</li>
+<li><p>SwiftUI 如何获知销毁视图？</p>
+<ul>
+<li><code>SwiftUI</code> 视图是值类型，因此没有直接方法来直接检测它们什么时候被释放。但是可以使用的对象（引用类型）（如 <code>ObservableObject</code> 实例）析构器 ( <code>deinit</code>)，这样在释放它们时会得到该析构器调用。</li>
+</ul>
+</li>
+</ul>
+<h2 id="描述-ios-14-及更高版本中的-swiftui-应用程序生命周期">描述 iOS 14 及更高版本中的 SwiftUI 应用程序生命周期</h2>
+<ul>
+<li><p>随着 <code>iOS 14</code> 以及更高版本中引入 <code>@main</code> ，您可以使用 SwiftUI 创建应用程序，而无需传统的 AppDelegate。现在可以直接使用 <code>App</code> 协议来定义应用程序的入口点。</p>
+</li>
+<li><p>生命周期方法（例如处理后台或前台事件）可以使用新的应用程序生命周期方法进行处理；</p>
+</li>
+<li><p>列举与<code>App</code> 协议相关联的生命周期事件</p>
+<ul>
+<li><p>onContinueUserActivity 当应用程序继续从另一台设备移交的用户活动时调用</p>
+</li>
+<li><p>onOpenURL 当应用程序通过URL打开时调用</p>
+</li>
+</ul>
+</li>
+<li><p>总而言之，处理 <code>SwiftUI</code> 生命周期的工作围绕着了解视图何时被重新绘制，对特定的生命周期事件使用 <code>onAppear</code> 和 <code>onDisappear</code> 等修饰符，以及以让 <code>SwiftUI</code> 知道何时需要更新的方式管理状态。与 <code>SwiftUI</code> 一样，关键是陈述性地思考：根据 UI 的状态定义 UI 的外观，系统管理实际的渲染和更新。</p>
+</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../Swift/" class="navigation navigation-prev " aria-label="Previous page: Swift">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../Flutter/" class="navigation navigation-next " aria-label="Next page: Flutter">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"SwiftUI","level":"1.6","depth":1,"next":{"title":"Flutter","level":"1.7","depth":1,"path":"Chapters/Flutter/README.md","ref":"Chapters/Flutter/README.md","articles":[]},"previous":{"title":"Swift","level":"1.5","depth":1,"path":"Chapters/Swift/README.md","ref":"Chapters/Swift/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/liyb93"},"search-pro":{},"expandable-chapters-small":{},"back-to-top-button":{},"code":{"copyButtons":true},"highlight":{},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"3.2.3","description":"iOS知识总结"},"file":{"path":"Chapters/SwiftUI/README.md","mtime":"2024-03-19T08:22:22.927Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-19T08:22:33.793Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

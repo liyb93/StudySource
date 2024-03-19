@@ -1,0 +1,1026 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Objective-C · iOS知识总结</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="author" content="liyb">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search-pro/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../Swift/" />
+    
+    
+    <link rel="prev" href="../计算机基础/" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    前言
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../数据结构/">
+            
+                <a href="../数据结构/">
+            
+                    
+                    数据结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../计算机基础/">
+            
+                <a href="../计算机基础/">
+            
+                    
+                    计算机基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Objective-C
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../Swift/">
+            
+                <a href="../Swift/">
+            
+                    
+                    Swift
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../SwiftUI/">
+            
+                <a href="../SwiftUI/">
+            
+                    
+                    SwiftUI
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../Flutter/">
+            
+                <a href="../Flutter/">
+            
+                    
+                    Flutter
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../ReactNative/">
+            
+                <a href="../ReactNative/">
+            
+                    
+                    ReactNative
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            本书使用 HonKit 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >Objective-C</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="objective-c">Objective-C</h1>
+<h2 id="基础知识">基础知识</h2>
+<ul>
+<li>一个NSObject对象占用多少内存？<ul>
+<li>系统分配了16个字节给NSObject对象（通过malloc_size函数获得）</li>
+<li>但NSObject对象内部只使用了8个字节的空间（64bit环境下，可以通过class_getInstanceSize函数获得）</li>
+</ul>
+</li>
+<li>对象的isa指针指向哪里？<ul>
+<li>instance对象的isa指向class对象</li>
+<li>class对象的isa指向meta-class对象</li>
+<li>meta-class对象的isa指向基类的meta-class对象</li>
+</ul>
+</li>
+<li>OC的类信息存放在哪里？<ul>
+<li>对象方法、属性、成员变量、协议信息，存放在class对象中</li>
+<li>类方法，存放在meta-class对象中</li>
+<li>成员变量的具体值，存放在instance对象</li>
+</ul>
+</li>
+<li>isa、superclass总结<ul>
+<li>instance的isa指向class</li>
+<li>class的isa指向meta-class</li>
+<li>meta-class的isa指向基类的meta-class</li>
+<li>class的superclass指向父类的class<ul>
+<li>如果没有父类，superclass指针为nil</li>
+</ul>
+</li>
+<li>meta-class的superclass指向父类的meta-class<ul>
+<li>基类的meta-class的superclass指向基类的class</li>
+</ul>
+</li>
+<li>instance调用对象方法的轨迹<ul>
+<li>isa找到class，方法不存在，就通过superclass找父类</li>
+</ul>
+</li>
+<li>class调用类方法的轨迹<ul>
+<li>isa找meta-class，方法不存在，就通过superclass找父类</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="锁">锁</h2>
+<ul>
+<li>互斥锁:防止两条线程同时对同一公共资源(比如全局变量)进行读写的机制。当获取锁操作失败时，线程会进入睡眠，等待锁释放时被唤醒<ul>
+<li>递归锁:可重入锁，同一个线程在锁释放前可再次获取锁，即可以递归调用</li>
+<li>非递归锁:不可重入，必须等锁释放后才能再次获取锁</li>
+</ul>
+</li>
+<li>自旋锁:线程反复检查锁变量是否可⽤。由于线程在这⼀过程中保持执⾏， 因此是⼀种忙等待。⼀旦获取了⾃旋锁，线程会⼀直保持该锁，直⾄显式释 放⾃旋锁。⾃旋锁避免了进程上下⽂的调度开销，因此对于线程只会阻塞很短时间的场合是有效的</li>
+<li>区别<ul>
+<li>互斥锁在线程获取锁但没有获取到时，线程会进入休眠状态，等锁被释放时线程会被唤醒</li>
+<li>自旋锁的线程则会一直处于等待状态（忙等待）不会进入休眠——因此效率高</li>
+</ul>
+</li>
+</ul>
+<h2 id="事件响应链">事件响应链</h2>
+<ul>
+<li>UIApplication 会触发 func sendEvent(_ event: UIEvent) 将一个封装好的 UIEvent 传给 UIWindow，也就是当前展示的 UIWindow，通常情况接下来会传给当前展示的 UIViewController，接下来传给 UIViewController 的根视图。这个过程是一条龙服务，没有分叉。但是在传递给当前 UIViewController 的根视图，然后在传递给controller的view,检测是否可接受事件，检测坐标是否在自己内部，遍历子视图，重复上面步骤，找到合适的控件进行响应事件。</li>
+</ul>
+<h2 id="block">Block</h2>
+<h3 id="原理与本质">原理与本质</h3>
+<ul>
+<li>block本质上也是一个OC对象，它内部也有个isa指针</li>
+<li>block是封装了函数调用以及函数调用环境的OC对象</li>
+</ul>
+<h3 id="block结构">Block结构</h3>
+<pre><code>struct Block_layout {
+    void *isa;
+    int flags;
+    int reserved;
+   // block执行时调用的函数指针，block定义时内部的执行代码都在这个函数中
+    void (*invoke)(void *, ...);
+    // block的详细描述
+    struct Block_descriptor *descriptor;
+    /* Imported variables. */
+};
+struct Block_descriptor {
+    unsigned long int reserved;
+    unsigned long int size;
+    // copy/dispose，辅助拷贝/销毁函数，处理block范围外的变量时使用
+    void (*copy)(void *dst, void *src);
+    void (*dispose)(void *);
+};
+</code></pre><h3 id="block变量捕获">block变量捕获</h3>
+<ul>
+<li>为了保证block内部能够正常访问外部的变量，block有个变量捕获机制</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">变量类型</th>
+<th style="text-align:center">捕获到block内部</th>
+<th style="text-align:center">访问方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">局部变量(auto)</td>
+<td style="text-align:center"><input type="checkbox" checked disabled></td>
+<td style="text-align:center">值传递</td>
+</tr>
+<tr>
+<td style="text-align:center">局部变量(static)</td>
+<td style="text-align:center"><input type="checkbox" checked disabled></td>
+<td style="text-align:center">指针传递</td>
+</tr>
+<tr>
+<td style="text-align:center">全局变量</td>
+<td style="text-align:center"><input type="checkbox" disabled></td>
+<td style="text-align:center">直接访问</td>
+</tr>
+</tbody>
+</table>
+<h3 id="block">__block</h3>
+<h4 id="原理">原理</h4>
+<ul>
+<li><p><code>__block</code>修饰auto变量，在block内使用，block会把修饰的变量包装成对象，所以使用<code>__block</code>修饰的变量可以进行修改，这是因为block内使用的指针进行修改</p>
+<pre><code>struct 包装的属性对象 {
+    void *isa;
+    // 指向自己
+    void *forwarding;
+    int flag;
+    int size;
+    // 修饰的变量
+    ...
+};
+</code></pre></li>
+<li><p>block在修改NSMutableArray时需要进行<code>__blcok</code>吗</p>
+<ul>
+<li>不需要，因为array使用的是指针修改，不存在无法修改的问题。</li>
+</ul>
+</li>
+</ul>
+<h3 id="copy修饰">copy修饰</h3>
+<ul>
+<li>在ARC环境下，编译器会根据情况自动将栈上的block复制到堆上，比如以下情况<ul>
+<li>block作为函数返回值时</li>
+<li>将block赋值给__strong指针时</li>
+<li>block作为Cocoa API中方法名含有usingBlock的方法参数时</li>
+<li>block作为GCD API的方法参数时</li>
+<li>ARC下使用strong/copy都可以</li>
+</ul>
+</li>
+<li>MRC下只能使用copy</li>
+</ul>
+<h3 id="类型">类型</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th style="text-align:left">介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NSGlobalBlock</td>
+<td style="text-align:left">没有访问auto变量的block，存放在数据段。调用copy什么都不做。</td>
+</tr>
+<tr>
+<td>NSStackBlock</td>
+<td style="text-align:left">访问auto变量,存放在栈中，注意ARC中测试时会显示为NSMallockBlock,这是因为编译器对block做了处理，关闭ARC即可。会自动销毁，所以需要用copy修饰，把block存到堆中</td>
+</tr>
+<tr>
+<td>NSMallocBlock</td>
+<td style="text-align:left">NSStackBlock调用copy；调用copy引用计数器加1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="category">Category</h2>
+<h3 id="使用场合">使用场合</h3>
+<ul>
+<li>方法拆分、不改变原类的基础上增加方法、属性等。</li>
+</ul>
+<h3 id="结构">结构</h3>
+<pre><code>struct category_t{
+    const char *name;   // 扩展类名
+    struct _class_t *cls;   // 
+    const struct _method_list_t *instance_methods;  // 对象方法列表
+    const struct _method_list_t *class_methods; // 类方法类别
+    const struct _protoclo_list_t *protocols  // 协议列表
+    const struct _prop_list_t *properties;    // 属性列表
+}
+</code></pre><h3 id="加载过程">加载过程</h3>
+<ul>
+<li>通过runtime加载某个类的所有Category数据</li>
+<li>把所有的Category方法、属性、协议合并到一个新数组中</li>
+<li>将合并后的分类数据插入到类原有的数据前面</li>
+<li>注：因为分类数据是插入到类原有数据前面，所以调用属性、方法、协议等都优先调用分类中的数据。</li>
+</ul>
+<h3 id="与extension区别">与Extension区别</h3>
+<ul>
+<li>Category是在运行时才把分类数据添加进类信息中</li>
+<li>Extension编译是就把数据添加进类信息中</li>
+</ul>
+<h3 id="load">load</h3>
+<ul>
+<li>load方法会在runtime加载类、分类时调用</li>
+<li>每个类、分类的+load,在程序运行过程中只调用一次</li>
+<li>注：分类的+load不会覆盖类的+load</li>
+</ul>
+<h4 id="调用顺序">调用顺序</h4>
+<ul>
+<li>先调用类的+load<ul>
+<li>按编译先后顺序调用（先编译先调用）</li>
+<li>调用子类的+load之前会先调用父类的+load</li>
+</ul>
+</li>
+<li>再调用分类的+load<ul>
+<li>按编译先后顺序调用（先编译先调用）</li>
+</ul>
+</li>
+</ul>
+<h3 id="initialize">initialize</h3>
+<ul>
+<li>initialize方法会在类第一次接收到消息时调用</li>
+</ul>
+<h4 id="调用顺序">调用顺序</h4>
+<ul>
+<li>先调用父类的+initialize,再调用子类的+initialize(子类不存在时不调用)</li>
+<li>先初始化父类，在初始化子类，每个类只初始化一次</li>
+</ul>
+<h3 id="load与initialize">load与initialize</h3>
+<ul>
+<li>+initialize是通过objc_msgSend进行调用；+load是根据函数地址直接调用。</li>
+<li>如果子类没有实现+initialize，会调用父类的+initialize，所以父类的+initialize可能会调用多次</li>
+<li>如果分类实现的+initialize，就覆盖类本身的+initialize调用</li>
+</ul>
+<h3 id="成员变量">成员变量</h3>
+<ul>
+<li>不能直接给Category添加成员变量，因为Category结构中没有属性列表，但是可以通过runtime的关联机制实现相同的效果</li>
+</ul>
+<h3 id="属性关联">属性关联</h3>
+<ul>
+<li>关联对象并不是存储在被关联对象本身内存中</li>
+<li>关联对象存储在全局的统一的一个AssociationsManager中</li>
+<li>设置关联对象为nil，就相当于是移除关联对象</li>
+</ul>
+<h2 id="kvc">KVC</h2>
+<h3 id="查找顺序">查找顺序</h3>
+<ul>
+<li>按照getKey、key、isKey、_key顺序查找方法<ul>
+<li>找到直接调用方法</li>
+<li>未找到：查看accessInstanceVariablesDirectly方法返回值，默认为Yes；方法意思是是否允许直接访问成员变量。<ul>
+<li>Yes：按照_key、_isKey、key、isKey的顺序查找<ul>
+<li>找到直接赋值</li>
+<li>未找到</li>
+</ul>
+</li>
+<li>No：调用valueForUndefinedKey:方法，抛出NSUnKnownKeyException异常</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="赋值顺序">赋值顺序</h3>
+<ul>
+<li>按照setKey、_setKey顺序查找方法<ul>
+<li>找到方法：传递参数，调用方法</li>
+<li>未找到：查看accessInstanceVariablesDirectly方法返回值，默认为Yes；方法意思是是否允许直接访问成员变量。<ul>
+<li>Yes：按照_key、_isKey、key、isKey的顺序查找<ul>
+<li>找到直接赋值</li>
+<li>未找到</li>
+</ul>
+</li>
+<li>No：调用setValue:forUndefinedKey:方法，抛出NSUnKnownKeyException异常</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="kvo">KVO</h2>
+<h3 id="原理">原理</h3>
+<ul>
+<li>利用Runtime机制功态生成个子类，并且让instance对象的isa指针指向这个全新的类</li>
+<li>当修改instance对象的属性时，会调用foundation的_NSSetXXXValueAndNotify函数</li>
+<li>调用顺序<ul>
+<li>willChangeValueForKey:</li>
+<li>setValue:</li>
+<li>didChangeValueForKey:</li>
+</ul>
+</li>
+<li>内部会触发监听器（Oberser）的监听方法</li>
+</ul>
+<h3 id="派生类重写方法">派生类重写方法</h3>
+<ul>
+<li>set方法：变化监听</li>
+<li>class：屏蔽方法实现</li>
+<li>dealloc：后续收尾</li>
+<li>＿isKvoA：</li>
+</ul>
+<h3 id="手动触发">手动触发</h3>
+<ul>
+<li>手动调用WillChangeValueForKey</li>
+<li>set方法赋值</li>
+<li>手动调用DidChangeValueForKey</li>
+</ul>
+<h3 id="问题">问题</h3>
+<ul>
+<li>直接修改属性不会执行属性监听方法</li>
+</ul>
+<h2 id="runloop">Runloop</h2>
+<ul>
+<li>运行循环</li>
+<li>在程序运行过程中循环做一些事情</li>
+</ul>
+<h3 id="应用">应用</h3>
+<ul>
+<li>定时器（Timer）、PerformSelector</li>
+<li>GCD Async Main Queue</li>
+<li>事件响应、手势识别、界面刷新</li>
+<li>网络请求</li>
+<li>AutoreleasePool</li>
+</ul>
+<h3 id="作用">作用</h3>
+<ul>
+<li>保持程序的持续运行</li>
+<li>处理App中的各种事件（比如触摸事件、定时器事件等）</li>
+<li>节省CPU资源，提高程序性能</li>
+</ul>
+<h3 id="具体应用">具体应用</h3>
+<ul>
+<li>控制线程生命周期（线程保活）</li>
+<li>解决NSTimer在滑动时停止工作的问题</li>
+<li>监控应用卡顿</li>
+<li>性能优化</li>
+</ul>
+<h3 id="runloop与线程">Runloop与线程</h3>
+<ul>
+<li>每条线程都有唯一的一个与之对应的RunLoop对象</li>
+<li>RunLoop保存在一个全局的Dictionary里，线程作为key，RunLoop作为value</li>
+<li>线程刚创建时并没有RunLoop对象，RunLoop会在第一次获取它时创建</li>
+<li>RunLoop会在线程结束时销毁</li>
+<li>主线程的RunLoop已经自动获取（创建），子线程默认没有开启RunLoop</li>
+</ul>
+<h3 id="cfrunloopmoderef">CFRunloopModeRef</h3>
+<ul>
+<li>CFRunLoopModeRef代表RunLoop的运行模式</li>
+<li>一个RunLoop包含若干个Mode，每个Mode又包含Source0/Source1/Timer/Observer</li>
+<li>RunLoop启动时只能选择其中一个Mode，作为currentMode</li>
+<li>如果需要切换Mode，只能退出当前Loop，再重新选择一个Mode进入<ul>
+<li>不同组的Source0/Source1/Timer/Observer能分隔开来，互不影响</li>
+</ul>
+</li>
+<li>如果Mode里没有任何Source0/Source1/Timer/Observer，RunLoop会立马退出</li>
+</ul>
+<h4 id="常用的mode">常用的Mode</h4>
+<ul>
+<li>kCFRunLoopDefaultMode（NSDefaultRunLoopMode）：App的默认Mode，通常主线程是在这个Mode下运行</li>
+<li>UITrackingRunLoopMode：界面跟踪 Mode，用于 ScrollView 追踪触摸滑动，保证界面滑动时不受其他 Mode 影响</li>
+</ul>
+<h4 id="mode">Mode</h4>
+<ul>
+<li>source0:触摸事件处理</li>
+<li>source1:基于port的线程通信和系统事件捕捉</li>
+<li>timer:定时器事件</li>
+<li>observer:runloop状态监听</li>
+</ul>
+<h2 id="runtime">Runtime</h2>
+<ul>
+<li>OC是一门动态性语言，允许很多操作在运行是进行操作</li>
+<li>OC的动态性就是靠runtime进行实现，runtime是一套C语言的API,封装了很多动态性相关的函数</li>
+<li>平时编写的OC代码，底层都是转成runtime api调用</li>
+</ul>
+<h3 id="具体应用">具体应用</h3>
+<ul>
+<li>利用关联对象给分类添加属性</li>
+<li>遍历类的所有成员变量（修改textfiled占位文字颜色、字典转模型、自动归档解档等）</li>
+<li>交换方法（替换系统方法实现）</li>
+<li>利用消息转发机制解决方法找不到的异常问题</li>
+</ul>
+<h3 id="isa">isa</h3>
+<ul>
+<li>在arm64架构之前，isa就是一个普通的指针，存储着Class、Meta-Class对象的内存地址</li>
+<li>从arm64架构开始，对isa进行了优化，使用一个64位的共用体（union）结构存储数据，其中的33位存储内存地址，其余存储其他数据</li>
+</ul>
+<pre><code>union isa_t {
+    Class cls;
+    uintptr_t bits;
+    struct {
+    /*
+        0，代表普通的指针，存储着Class、Meta-Class对象的内存地址
+        1，代表优化过，使用位域存储更多的信息
+    */
+        uintptr_t nonpointer; 
+        // 是否有设置过关联对象，如果没有，释放时会更快
+        uintptr_t has_assoc;
+        // 是否有C++的析构函数（.cxx_destruct），如果没有，释放时会更快
+        uintptr_t has_cxx_dtor;
+        // 存储着Class、Meta-Class对象的内存地址信息
+        uintptr_t shiftcls;
+        // 用于在调试时分辨对象是否未完成初始化
+        uintptr_t magic;
+        // 是否有被弱引用指向过，如果没有，释放时会更快
+        uintptr_t weakly_referenced;
+        // 对象是否正在释放
+        uintptr_t deallocating;
+        /*
+            引用计数器是否过大无法存储在isa中
+            如果为1，那么引用计数会存储在一个叫SideTable的类的属性中
+        */ 
+        uintptr_t has_sidetable_rc;
+        // 里面存储的值是引用计数器减1
+        uintptr_t extra_rc;
+    }
+}
+</code></pre><h3 id="消息转发机制">消息转发机制</h3>
+<h4 id="消息发送">消息发送</h4>
+<ul>
+<li>检测receiver(接收者)是否为nil,为nil退出</li>
+<li>receiver通过isa指针找到receiverClass</li>
+<li>receiverClass的cache中查找方法，找到调用方法，结束查找</li>
+<li>receiverClass的class_rw_t中查找方法,找到方法，调用方法并把方法缓存到receiverClass的cache中，结束查找。</li>
+<li>receiverClass通过superclass指针找到superClass，重复上面步骤</li>
+</ul>
+<h4 id="动态分析">动态分析</h4>
+<ul>
+<li>是否曾经有动态解析，有的话直接消息转发</li>
+<li>调用+resolveInstanceMethod或+resolveClassMethod来动态解析方法</li>
+<li>标记为已动态解析</li>
+<li>动态解析过后，会重新走“消息发送”的流程(从receiverClass的cache中查找方法)</li>
+</ul>
+<h4 id="消息转发">消息转发</h4>
+<ul>
+<li>调用forwardingTargetForSelector:检测是否有备用接收者<ul>
+<li>返回值不为nil,执行objc_msgSend(返回值, SEL)</li>
+<li>为nil，调用methodSignatureForSelector进行签名<ul>
+<li>不为nil, 调用forwardInvocation:方法</li>
+<li>为nil，调用doesNotRecognizeSelector</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="weak原理">weak原理</h3>
+<ul>
+<li>runtime维持了一个weak表；当一个对象obj被weak指针指向时，这个weak指针会以obj的指针作为key，存储到sideTable类的weak_table这个散列表上对应的一个weak指针数组里面。 当一个对象obj的dealloc方法被调用时，Runtime会以obj的指针为key，从sideTable的weak_table散列表中，找出对应的weak指针列表，然后将里面的weak指针逐个置为nil</li>
+</ul>
+<pre><code>struct SideTable {
+    // 保证原子操作的自旋锁
+    spinlock_t slock;
+    // 引用计数的 hash 表
+    RefcountMap refcnts;
+    // weak 引用全局 hash 表
+    weak_table_t weak_table;
+}
+struct weak_table_t {
+    // 保存了所有指向指定对象的 weak 指针
+    weak_entry_t *weak_entries;
+    // 存储空间
+    size_t    num_entries;
+    // 参与判断引用计数辅助量
+    uintptr_t mask;
+    // hash key 最大偏移值
+    uintptr_t max_hash_displacement;
+}
+</code></pre><h2 id="性能优化">性能优化</h2>
+<h3 id="app启动优化">App启动优化</h3>
+<ul>
+<li>APP的启动可以分为2种<ul>
+<li>冷启动（Cold Launch）：从零开始启动APP</li>
+<li>热启动（Warm Launch）：APP已经在内存中，在后台存活着，再次点击图标启动APP</li>
+</ul>
+</li>
+<li>通过添加环境变量可以打印出APP的启动时间分析（Edit scheme -&gt; Run -&gt; Arguments）<ul>
+<li>DYLD_PRINT_STATISTICS设置为1</li>
+<li>如果需要更详细的信息，那就将DYLD_PRINT_STATISTICS_DETAILS设置为1</li>
+</ul>
+</li>
+<li>dyld<ul>
+<li>减少动态库、合并一些动态库（定期清理不必要的动态库）</li>
+<li>减少Objc类、分类的数量、减少Selector数量（定期清理不必要的类、分类）</li>
+<li>减少C++虚函数数量</li>
+<li>Swift尽量使用struct</li>
+</ul>
+</li>
+<li>runtime<ul>
+<li>用+initialize方法和dispatch<em>once取代所有的<em>_attribute</em></em>((constructor))、C++静态构造器、ObjC的+load</li>
+</ul>
+</li>
+<li>main<ul>
+<li>在不影响用户体验的前提下，尽可能将一些操作延迟，不要全部都放在finishLaunching方法中</li>
+<li>按需加载</li>
+</ul>
+</li>
+</ul>
+<h3 id="安装包瘦身">安装包瘦身</h3>
+<h4 id="资源（图片、音频、视频等）">资源（图片、音频、视频等）</h4>
+<ul>
+<li>采取无损压缩</li>
+<li>去除没有用到的资源</li>
+</ul>
+<h4 id="可执行文件瘦身">可执行文件瘦身</h4>
+<ul>
+<li>编译器优化<ul>
+<li>Strip Linked Product、Make Strings Read-Only、Symbols Hidden by Default设置为YES</li>
+<li>去掉异常支持，Enable C++ Exceptions、Enable Objective-C Exceptions设置为NO， Other C Flags添加-fno-exceptions</li>
+</ul>
+</li>
+<li>利用AppCode（<a href="https://www.jetbrains.com/objc/）检测未使用的代码：菜单栏" target="_blank">https://www.jetbrains.com/objc/）检测未使用的代码：菜单栏</a> -&gt; Code -&gt; Inspect Code</li>
+<li>编写LLVM插件检测出重复代码、未被调用的代码</li>
+</ul>
+<h3 id="cpu和gpu">CPU和GPU</h3>
+<ul>
+<li>CPU: 对象的创建和销毁、对象属性的调整、布局计算、文本的计算和排版、图片的格式转换和解码、图像的绘制（Core Graphics)<ul>
+<li>主要思路：尽可能减少CPU、GPU资源消耗</li>
+<li>尽量用轻量级的对象，比如用不到事件处理的地方，可以考虑使用CALayer取代UIView</li>
+<li>不要频繁地调用UIView的相关属性，比如frame、bounds、transform等属性，尽量减少不必要的修改</li>
+<li>尽量提前计算好布局，在有需要时一次性调整对应的属性，不要多次修改属性</li>
+<li>Autolayout会比直接设置frame消耗更多的CPU资源</li>
+<li>图片的size最好刚好跟UIImageView的size保持一致</li>
+<li>控制一下线程的最大并发数量</li>
+<li>尽量把耗时的操作放到子线程<ul>
+<li>文本处理（尺寸计算、绘制）</li>
+<li>图片处理（解码、绘制）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>GPU: 纹理的渲染<ul>
+<li>尽量避免短时间内大量图片的显示，尽可能将多张图片合成一张进行显示</li>
+<li>GPU能处理的最大纹理尺寸是4096x4096，一旦超过这个尺寸，就会占用CPU资源进行处理，所以纹理尽量不要超过这个尺寸</li>
+<li>尽量减少视图数量和层次</li>
+<li>减少透明的视图（alpha&lt;1），不透明的就设置opaque为YES</li>
+<li>尽量避免出现离屏渲染</li>
+</ul>
+</li>
+</ul>
+<h3 id="离屏渲染">离屏渲染</h3>
+<ul>
+<li>在OpenGL中，GPU有2种渲染方式<ul>
+<li>On-Screen Rendering：当前屏幕渲染，在当前用于显示的屏幕缓冲区进行渲染操作</li>
+<li>Off-Screen Rendering：离屏渲染，在当前屏幕缓冲区以外新开辟一个缓冲区进行渲染操作</li>
+</ul>
+</li>
+<li>离屏渲染消耗性能的原因<ul>
+<li>需要创建新的缓冲区</li>
+<li>离屏渲染的整个过程，需要多次切换上下文环境，先是从当前屏幕（On-Screen）切换到离屏（Off-Screen）；等到离屏渲染结束以后，将离屏缓冲区的渲染结果显示到屏幕上，又需要将上下文环境从离屏切换到当前屏幕</li>
+</ul>
+</li>
+<li>哪些操作会触发离屏渲染？<ul>
+<li>光栅化，layer.shouldRasterize = YES</li>
+<li>遮罩，layer.mask</li>
+<li>圆角，同时设置layer.masksToBounds = YES、layer.cornerRadius大于0<ul>
+<li>考虑通过CoreGraphics绘制裁剪圆角，或者叫美工提供圆角图片</li>
+</ul>
+</li>
+<li>阴影，layer.shadowXXX<ul>
+<li>如果设置了layer.shadowPath就不会产生离屏渲染</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="卡顿检测">卡顿检测</h3>
+<ul>
+<li>可以添加Observer到主线程RunLoop中，通过监听RunLoop状态切换的耗时，以达到监控卡顿的目的</li>
+</ul>
+<h3 id="耗电优化">耗电优化</h3>
+<ul>
+<li>CPU优化<ul>
+<li>尽可能降低CPU、GPU功耗</li>
+<li>少用定时器</li>
+<li>优化I/O操作<ul>
+<li>尽量不要频繁写入小数据，最好批量一次性写入</li>
+<li>读写大量重要数据时，考虑用dispatch_io，其提供了基于GCD的异步操作文件I/O的API。用dispatch_io系统会优化磁盘访问</li>
+<li>数据量比较大的，建议使用数据库（比如SQLite、CoreData）</li>
+</ul>
+</li>
+<li>网络优化<ul>
+<li>减少、压缩网络数据</li>
+<li>如果多次请求的结果是相同的，尽量使用缓存</li>
+<li>使用断点续传，否则网络不稳定时可能多次传输相同的内容</li>
+<li>网络不可用时，不要尝试执行网络请求</li>
+<li>让用户可以取消长时间运行或者速度很慢的网络操作，设置合适的超时时间</li>
+<li>批量传输，比如，下载视频流时，不要传输很小的数据包，直接下载整个文件或者一大块一大块地下载。如果下载广告，一次性多下载一些，然后再慢慢展示。如果下载电子邮件，一次下载多封，不要一封一封地下载</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>定位优化<ul>
+<li>如果只是需要快速确定用户位置，最好用CLLocationManager的requestLocation方法。定位完成后，会自动让定位硬件断电</li>
+<li>如果不是导航应用，尽量不要实时更新位置，定位完毕就关掉定位服务</li>
+<li>尽量降低定位精度，比如尽量不要使用精度最高的kCLLocationAccuracyBest</li>
+<li>需要后台定位时，尽量设置pausesLocationUpdatesAutomatically为YES，如果用户不太可能移动的时候系统会自动暂停位置更新</li>
+<li>尽量不要使用startMonitoringSignificantLocationChanges，优先考虑startMonitoringForRegion:</li>
+</ul>
+</li>
+<li>硬件检测优化<ul>
+<li>用户移动、摇晃、倾斜设备时，会产生动作(motion)事件，这些事件由加速度计、陀螺仪、磁力计等硬件检测。在不需要检测的场合，应该及时关闭这些硬件</li>
+</ul>
+</li>
+</ul>
+<h2 id="三方库">三方库</h2>
+<h3 id="sdwebimage">SDWebImage</h3>
+<h4 id="原理解析">原理解析</h4>
+<ul>
+<li>入口 setImageWithURL:placeholderImage:options:会先把 placeholderImage显示，然后 SDWebImageManager根据 URL 开始处理图片。（以URL的MD5值作为key）</li>
+<li>进入SDImageCache从内存缓存查找SDImageCacheDelegate回调给SDWebImageManager，然后通过NSDWebImageManagerDelegate回调展示</li>
+<li>如果内存缓存中没有，生成 ｀NSOperation｀添加到队列，开始从硬盘（Disk）查找图片是否已经下载<ul>
+<li>有： 回主线程进行结果回调 NotifyDelegate，将图片添加到内存缓存中SDImageCache，再回调展示</li>
+<li>无： 共享或重新生成一个SDWebImageDownloader下载图片，由 NSURLSession实现相关 delegate，来判断图片下载中、下载完成和下载失败。</li>
+</ul>
+</li>
+<li>下载完后，放入硬盘，加入缓存，再回调展示</li>
+</ul>
+<h4 id="sdwebimage缓存为什么使用maptable">SDWebImage缓存为什么使用MapTable</h4>
+<ul>
+<li>NSMaptable是可变的，没有不可变的类</li>
+<li>可以持有键和值的弱引用，当键值当中的一个被释放时，整个这一项都会移除掉</li>
+<li>可以对成员进行copy操作</li>
+<li>可以存储任意的指针，通过指针来进行相等性和散列检查</li>
+</ul>
+<h3 id="afnetworking">AFNetworking</h3>
+<h4 id="框架核心">框架核心</h4>
+<h5 id="nsurlsession">NSURLSession</h5>
+<ul>
+<li>AFURLSessionManager</li>
+<li>AFHTTPSessionManager</li>
+</ul>
+<h5 id="序列化反序列化">序列化/反序列化</h5>
+<ul>
+<li>AFURLRequestSerialization上传的数据转换成JSON格式</li>
+<li>AFJSONResponseSerializer JSON解析器</li>
+</ul>
+<h5 id="安全协议">安全协议</h5>
+<ul>
+<li>AFSecurityPolicy 是针对 HTTPS的 服务</li>
+</ul>
+<h5 id="网络管理器">网络管理器</h5>
+<ul>
+<li>AFNetworkReachabilityManager，网络状态检测</li>
+</ul>
+<h5 id="uikit">UIKit</h5>
+<ul>
+<li>提供了网络请求过程中与UI界面显示相关的操作接口 ActivityIndicator、UIAlertView、UIButton、UIImageView、UIprogressView、UIWebView</li>
+</ul>
+<h4 id="请求过程">请求过程</h4>
+<ul>
+<li>初始化会话管理类：AFURLSessionManager</li>
+<li>配置会话模式类型：NSURLSessionConfig</li>
+<li>创建任务Task对象，启动任务</li>
+<li>通过KVO监听download进度和upload进度</li>
+<li>由任务代理回调处理：AFURLSessionmanagerTaskDelegate，数据响应，错误响应</li>
+</ul>
+<h3 id="mjextension">MJExtension</h3>
+<ul>
+<li>NSString、NSData 转化成JSON对象：(NSDictionary本身就是json对象) [keyValuesArray mj_JSONObject]</li>
+<li>遍历属性，返回属性列表，映射成对象MJProperty。 在Block回调中可以获取到每一个MJProperty（封装的属性） 通过单例做属性缓存</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../计算机基础/" class="navigation navigation-prev " aria-label="Previous page: 计算机基础">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../Swift/" class="navigation navigation-next " aria-label="Next page: Swift">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Objective-C","level":"1.4","depth":1,"next":{"title":"Swift","level":"1.5","depth":1,"path":"Chapters/Swift/README.md","ref":"Chapters/Swift/README.md","articles":[]},"previous":{"title":"计算机基础","level":"1.3","depth":1,"path":"Chapters/计算机基础/README.md","ref":"Chapters/计算机基础/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/liyb93"},"search-pro":{},"expandable-chapters-small":{},"back-to-top-button":{},"code":{"copyButtons":true},"highlight":{},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"3.2.3","description":"iOS知识总结"},"file":{"path":"Chapters/OC/README.md","mtime":"2024-03-19T08:22:22.927Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-19T08:22:33.793Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

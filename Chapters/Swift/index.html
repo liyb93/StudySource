@@ -1,0 +1,498 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Swift · iOS知识总结</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="author" content="liyb">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search-pro/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../SwiftUI/" />
+    
+    
+    <link rel="prev" href="../OC/" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    前言
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../数据结构/">
+            
+                <a href="../数据结构/">
+            
+                    
+                    数据结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../计算机基础/">
+            
+                <a href="../计算机基础/">
+            
+                    
+                    计算机基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../OC/">
+            
+                <a href="../OC/">
+            
+                    
+                    Objective-C
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.5" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Swift
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../SwiftUI/">
+            
+                <a href="../SwiftUI/">
+            
+                    
+                    SwiftUI
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../Flutter/">
+            
+                <a href="../Flutter/">
+            
+                    
+                    Flutter
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../ReactNative/">
+            
+                <a href="../ReactNative/">
+            
+                    
+                    ReactNative
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            本书使用 HonKit 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >Swift</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="swift">Swift</h1>
+<h2 id="swift和objective-c有什么区别？">Swift和Objective-C有什么区别？</h2>
+<ul>
+<li>Swift是强类型（静态）语言，有类型推断，Objective-C弱类型（动态）语言</li>
+<li>Swift面向协议编程，Objective-C面向对象编程</li>
+<li>Swift注重值类型，Objective-C注重引用类型</li>
+<li>Swift支持泛型，Objective-C只支持轻量泛型（给集合添加泛型）</li>
+<li>Swift支持静态派发（效率高）、动态派发（函数表派发、消息派发）方式，Objective-C支持动态派发（消息派发）方式</li>
+<li>Swift支持函数式编程（高阶函数）</li>
+<li>Swift的协议不仅可以被类实现，也可以被Struct和Enum实现</li>
+<li>Swift有元组类型、支持运算符重载</li>
+<li>Swift支持命名空间</li>
+<li>Swift支持默认参数</li>
+<li>Swift比Objective-C代码更简洁</li>
+</ul>
+<h2 id="派发机制">派发机制</h2>
+<h3 id="静态派发直接派发">静态派发(直接派发)</h3>
+<ul>
+<li>final、static关键字的函数</li>
+<li>Struct、Enum</li>
+<li>协议的Extensions、 Class的Extensions</li>
+</ul>
+<h3 id="函数表派发">函数表派发</h3>
+<ul>
+<li>Class默认、协议声明函数</li>
+</ul>
+<h3 id="消息派发">消息派发</h3>
+<ul>
+<li>dynamic修饰的函数(包含Extension)</li>
+</ul>
+<h2 id="struct和class的区别？">Struct和Class的区别？</h2>
+<ul>
+<li>Struct不支持继承，Class支持继承</li>
+<li>Struct是值类型，Class是引用类型</li>
+<li>Struct无法修改自身属性值，函数需要添加mutating关键字</li>
+<li>Struct不需要deinit方法，因为值类型不关系引用计数，Class需要deinit方法</li>
+<li>Struct初始化方法是基于属性的</li>
+</ul>
+<h2 id="与的区别">?与??的区别</h2>
+<ul>
+<li>？用来声明可选值，如果变量未初始化则自动初始化nil；在操作可选值时，如果可选值时nil则不响应后续的操作；使用as?进行向下转型操作；</li>
+<li>?? 用来判断左侧可选值非空（not nil）时返回左侧值可选值，左侧可选值为空（nil）则返回右侧的值。</li>
+</ul>
+<h2 id="mutating的作用">mutating的作用</h2>
+<ul>
+<li>Swift中协议是可以被Struct和Enum实现的，mutating关键字是为了能在被修饰的函数中修改Struct或Enum的变量值，对Class完全透明。</li>
+</ul>
+<h2 id="set集合类型的使用场景">Set(集合类型)的使用场景</h2>
+<ul>
+<li>Set存储值类型相同、无序、去重</li>
+</ul>
+<h2 id="final关键词的用法">final关键词的用法</h2>
+<ul>
+<li>final关键词的作用：它修饰的类、方法、变量是不能被继承或重写的，编译器会报错。另外，通过它可以显示的指定函数的派发机制。</li>
+</ul>
+<h3 id="lazy关键词的用法">lazy关键词的用法</h3>
+<ul>
+<li>lazy关键词的作用：指定延时加载（懒加载），懒加载存储属性只会在首次使用时才会计算初始值属性。懒加载属性必须声明（var）为变量，因为常量属性（let）初始化之前会有值。 lazy修饰的属性非线程安全的。</li>
+</ul>
+<h3 id="闭包是引用类型吗">闭包是引用类型吗?</h3>
+<ul>
+<li>闭包是引用类型。如果一个闭包被分配给一个变量，这个变量复制给另一个变量，那么他们引用的是同一个闭包，他们的捕捉列表也会被复制。</li>
+</ul>
+<h3 id="static和class的区别">static和class的区别</h3>
+<ul>
+<li>static可以修饰属性和方法<ul>
+<li>所修饰的属性和方法不能够被重写。</li>
+<li>static修饰的类方法和属性包含了final关键字的特性，重写会报错</li>
+</ul>
+</li>
+<li>class修饰方法和计算属性<ul>
+<li>我们同样可以使用class修饰方法和计算属性，但是不能够修饰存储属性</li>
+<li>类方法和计算属性是可以被重写的，可以使用class关键字也可以static</li>
+</ul>
+</li>
+</ul>
+<h3 id="closure与block的区别">closure与block的区别</h3>
+<ul>
+<li>closure是匿名函数、block是一个结构体对象</li>
+<li>closure通过逃逸闭包来在内部修改变量，block 通过 __block 修饰符</li>
+</ul>
+<h3 id="闭包">闭包</h3>
+<ul>
+<li>闭包会强引用它捕获的所有变量，非逃逸闭包不会造成循环应用，并且非逃逸闭包它的上下文的内存可以保存在栈上而不是堆上</li>
+</ul>
+<h4 id="逃逸闭包">逃逸闭包</h4>
+<ul>
+<li>在函数作用域以外被调用的闭包</li>
+</ul>
+<h4 id="非逃逸闭包">非逃逸闭包</h4>
+<ul>
+<li>在函数作用域以内被调用的闭包</li>
+</ul>
+<h3 id="swift为什么将stringarraydictionary设计成值类型？">Swift为什么将String,Array,Dictionary设计成值类型？</h3>
+<ul>
+<li>值类型相比引用类型,最大的优势在于内存使用的高效.</li>
+<li>值类型在栈上操作,引用类型在堆上操作.栈上的操作仅仅是单个指针的上下移动,而堆上的操作则牵涉到合并、移位、重新链接等.也就是说Swift这样设计,大幅减少了堆上的内存分配和回收的次数.同时写时复制又将值传递和复制的开销降到了最低.</li>
+<li>String,Array,Dictionary设计成值类型,也是为了线程安全考虑.通过Swift的let设置,使得这些数据达到了真正意义上的“不变”,它也从根本上解决了多线程中内存访问和操作顺序的问题.</li>
+<li>设计成值类型还可以提升API的灵活度.</li>
+</ul>
+<h3 id="值类型的写时复制">值类型的写时复制</h3>
+<ul>
+<li>只有当一个结构体发生了写入行为时才会有复制行为。</li>
+<li>在结构体内部用一个引用类型来存储实际的数据，在不进行写入操作的普通传递过程中，都是将内部的reference的引用计数+1，在进行写入操作时，对内部的reference做一次copy操作用来存储新的数据，防止和之前的reference产生意外的数据共享。</li>
+<li>swift中提供该[isKnownUniquelyReferenced]函数，他能检查一个类的实例是不是唯一的引用，如果是，我们就不需要对结构体实例进行复制，如果不是，说明对象被不同的结构体共享，这时对它进行更改就需要进行复制。</li>
+</ul>
+<h3 id="值类型与引用类型">值类型与引用类型</h3>
+<ul>
+<li>类是引用类型, 结构体为值类型</li>
+<li>结构体不可以继承</li>
+<li>值类型被赋予给一个变量、常量或者被传递给一个函数的时候，其值会被拷贝</li>
+<li>引用类型在被赋予到一个变量、常量或者被传递到一个函数时，其值不会被拷贝。因此，引用的是已存在的实例本身而不是其拷贝</li>
+<li>值类型是在栈中处理，引用类型是在堆中处理，栈中只牵扯到一个指针的上下移动，堆中要牵扯到合并、移动、重新链接等情况，所以值类型比引用类型更高效</li>
+</ul>
+<h3 id="存储属性和计算属性">存储属性和计算属性</h3>
+<h4 id="存储属性">存储属性</h4>
+<ul>
+<li>存储在特定类或结构体实例里的一个常量或变量。存储属性可以是变量存储属性（用关键字 var 定义），也可以是常量存储属性（用关键字 let 定义）。</li>
+</ul>
+<h4 id="计算属性">计算属性</h4>
+<ul>
+<li>除存储属性外，类、结构体和枚举可以定义计算属性。计算属性不直接存储值，而是提供一个getter和一个可选的setter，来间接获取和设置其他属性或变量的值。</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../OC/" class="navigation navigation-prev " aria-label="Previous page: Objective-C">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../SwiftUI/" class="navigation navigation-next " aria-label="Next page: SwiftUI">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Swift","level":"1.5","depth":1,"next":{"title":"SwiftUI","level":"1.6","depth":1,"path":"Chapters/SwiftUI/README.md","ref":"Chapters/SwiftUI/README.md","articles":[]},"previous":{"title":"Objective-C","level":"1.4","depth":1,"path":"Chapters/OC/README.md","ref":"Chapters/OC/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/liyb93"},"search-pro":{},"expandable-chapters-small":{},"back-to-top-button":{},"code":{"copyButtons":true},"highlight":{},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"3.2.3","description":"iOS知识总结"},"file":{"path":"Chapters/Swift/README.md","mtime":"2024-03-19T08:22:22.927Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-19T08:22:33.793Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
