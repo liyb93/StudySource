@@ -1,0 +1,25 @@
+{
+    "title": "iOS知识总结",
+    "description": "iOS知识总结",
+    "author": "liyb",
+    "output.name": "site",
+    "language": "zh-hans",
+    "gitbook": "3.2.3",
+    "root": ".",
+    "plugins": [
+        "-lunr",
+        "-search",
+        "search-pro",
+        "expandable-chapters-small",
+        "back-to-top-button",
+        "-sharing",
+        "github",
+        "code"
+        
+    ],
+    "pluginsConfig": {
+        "github": {
+            "url": "https://github.com/liyb93"
+        }
+    }
+}
