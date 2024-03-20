@@ -3,7 +3,7 @@
 <html lang="zh-hans" >
     <head>
         <meta charset="UTF-8">
-        <title>KVC&KVO · iOS知识总结</title>
+        <title>多线程 · iOS知识总结</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="HonKit 5.1.4">
@@ -80,10 +80,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="性能优化.html" />
+    <link rel="next" href="Block.html" />
     
     
-    <link rel="prev" href="Category.html" />
+    <link rel="prev" href="Runloop.html" />
     
 
     </head>
@@ -191,7 +191,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.3" data-path="多线程.html">
+        <li class="chapter active" data-level="1.4.3" data-path="多线程.html">
             
                 <a href="多线程.html">
             
@@ -230,7 +230,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.4.6" data-path="KVO&KVC.html">
+        <li class="chapter " data-level="1.4.6" data-path="KVO&KVC.html">
             
                 <a href="KVO&KVC.html">
             
@@ -369,7 +369,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >KVC&KVO</a>
+        <a href="../.." >多线程</a>
     </h1>
 </div>
 
@@ -384,70 +384,92 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="kvokvc">KVO&amp;KVC</h1>
-<h2 id="kvc">KVC</h2>
-<h5 id="查找顺序">查找顺序</h5>
+                                <h1 id="多线程">多线程</h1>
+<h2 id="gcd">GCD</h2>
+<p>GCD 是苹果的低级线程接口，用于支持多核硬件上的并发代码执行。</p>
+<h3 id="调度组（dispatchgroup）">调度组（DispatchGroup）</h3>
+<p>通常用于需要启动多个异步进程，但当所有进程完成后，我们只需要一个事件。这可以通过 DispatchGroup 来实现。</p>
+<pre><code class="lang-objc"><span class="hljs-comment">// 创建调度组</span>
+dispatch_group_t group = dispatch_group_create();
+<span class="hljs-comment">// 启动任务</span>
+dispatch_group_enter(group);
+dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(<span class="hljs-number">3</span> * <span class="hljs-built_in">NSEC_PER_SEC</span>)), dispatch_get_main_queue(), ^{
+    <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;任务一&quot;</span>);
+    <span class="hljs-comment">// 任务完成</span>
+    dispatch_group_leave(group);
+});
+
+dispatch_group_enter(group);
+dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(<span class="hljs-number">3</span> * <span class="hljs-built_in">NSEC_PER_SEC</span>)), dispatch_get_main_queue(), ^{
+    <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;任务二&quot;</span>);
+    dispatch_group_leave(group);
+});
+
+<span class="hljs-built_in">dispatch_queue_t</span> queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, <span class="hljs-number">0</span>);
+<span class="hljs-comment">// 任务完成通知, 所有的 enter-leave 任务对完成后，group.notify 被调用</span>
+dispatch_group_notify(group, queue, ^{
+    <span class="hljs-built_in">NSLog</span>(<span class="hljs-string">@&quot;任务结束&quot;</span>);
+});
+</code></pre>
+<h3 id="调度信号量（dispatchsemaphore）">调度信号量（DispatchSemaphore）</h3>
+<pre><code class="lang-objc"><span class="hljs-comment">/*
+    创建信号总量，即初始信号量允许的最大值, 最大并发任务的数量
+    参数：value: 信号总量的初值，数据类型为long类型。
+    返回值：如果value小于0，创建的sem对象其实是NULL类型。
+*/</span>
+dispatch_semaphore_t semaphore = dispatch_semaphore_create(<span class="hljs-number">1</span>);
+<span class="hljs-comment">/*
+    等待信号量
+    参数： 
+        dsema：dispatch_semaphore_t对象
+        timeout：DISPATCH_TIME_FOREVER或DISPATCH_TIME_NOW。
+      目前一般都是选择DISPATCH_TIME_FOREVER
+      DISPATCH_TIME_FOREVER 超时时间为永远，表示会一直等待信号量为正数，才会继续运行
+      DISPATCH_TIME_NOW 超时时间为0，表示忽略信号量，直接运行。
+*/</span>
+dispatch_semaphore_wait(semaphore, <span class="hljs-number">60</span>);
+<span class="hljs-comment">/*
+    发送信号量
+    参数： dsema: dispatch_semaphore_t对象
+    返回值：返回值为long类型。
+        当返回值为0时，表示当前并没有线程等待其处理的信号量，其处理的信号总量增加1。
+        当返回值不为0时，表示其当前有一个或者多个线程等待其处理的信号量，并且该函数唤醒了一个    等待的线程（当线程有优先级的时候，唤醒优先级最高的线程，否则随机唤醒）
+*/</span>
+dispatch_semaphore_signal(semaphore);
+</code></pre>
+<h3 id="dispatchworkitem">DispatchWorkItem</h3>
+<p><code>DispatchWorkItem</code>是iOS8时候推出的一套API, 增加了一些对任务控制的API. 与<code>Operation</code>对象或者<code>BlockOperation</code>比较像, 主要可以主动<code>cancel</code>, 并且增加了<code>notify</code>功能. 可以用于防抖和限流。</p>
+<pre><code class="lang-swift"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DispatchWorkItem</span> {
+    <span class="hljs-comment">// 初始化方法 =&gt; 最关键的是 最后的 block, 实际就是 我们要执行的 TaskItem</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">init</span>(<span class="hljs-params">qos</span>: <span class="hljs-type">DispatchQoS</span> <span class="hljs-operator">=</span> .unspecified, <span class="hljs-params">flags</span>: <span class="hljs-type">DispatchWorkItemFlags</span> <span class="hljs-operator">=</span> [], <span class="hljs-params">block</span>: <span class="hljs-keyword">@escaping</span> <span class="hljs-keyword">@convention(block)</span> () -&gt; <span class="hljs-type">Void</span>)
+    <span class="hljs-comment">/// sync 同步执行</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">perform</span>()
+    <span class="hljs-comment">/// 内置信号量 - 同步等待任务执行完成</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">wait</span>()
+    <span class="hljs-comment">/// 内置信号量 - 同步等待指定时间, 等待任务完成</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">wait</span>(<span class="hljs-params">timeout</span>: <span class="hljs-type">DispatchTime</span>) -&gt; <span class="hljs-type">DispatchTimeoutResult</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">wait</span>(<span class="hljs-params">wallTimeout</span>: <span class="hljs-type">DispatchWallTime</span>) -&gt; <span class="hljs-type">DispatchTimeoutResult</span>
+    <span class="hljs-comment">/// 内置信号量, WorkItem 执行完成或者被调度, 信号量触发通知, 可以指定 barrier</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">notify</span>(<span class="hljs-params">qos</span>: <span class="hljs-type">DispatchQoS</span> <span class="hljs-operator">=</span> .unspecified, <span class="hljs-params">flags</span>: <span class="hljs-type">DispatchWorkItemFlags</span> <span class="hljs-operator">=</span> [], <span class="hljs-params">queue</span>: <span class="hljs-type">DispatchQueue</span>, <span class="hljs-params">execute</span>: <span class="hljs-keyword">@escaping</span> <span class="hljs-keyword">@convention(block)</span> () -&gt; <span class="hljs-type">Void</span>)
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">notify</span>(<span class="hljs-params">queue</span>: <span class="hljs-type">DispatchQueue</span>, <span class="hljs-params">execute</span>: <span class="hljs-type">DispatchWorkItem</span>)
+    <span class="hljs-comment">/// 可以取消, 异步将 WorkItem内部的state设置层 isCancelled. 被调度立刻返回(注意, 也会触发notify)</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">func</span> <span class="hljs-title function_">cancel</span>()
+    <span class="hljs-comment">/// 判断WorkItem是否被取消的状态</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">var</span> isCancelled: <span class="hljs-type">Bool</span> { <span class="hljs-keyword">get</span> }
+}
+</code></pre>
+<h3 id="dispatchonce原理">dispatch_once原理</h3>
+<p>dispatch_once包含了一个 predicate 参数和一个 block 参数。其中，predicate 是一个指向 dispatch_once_t 结构体的指针，用来判断该 block 是否已经被执行过。block 则是需要执行的单例创建操作。</p>
+<p> dispatch_once 函数会执行以下两个步骤：</p>
 <ul>
-<li>按照getKey、key、isKey、_key顺序查找方法<ul>
-<li>找到直接调用方法</li>
-<li>未找到：查看accessInstanceVariablesDirectly方法返回值，默认为Yes；方法意思是是否允许直接访问成员变量。<ul>
-<li>Yes：按照_key、_isKey、key、isKey的顺序查找<ul>
-<li>找到直接赋值</li>
-<li>未找到</li>
-</ul>
+<li><p>调用 dispatch_once 函数时，dispatch_once_t 结构体会被初始化为 0。</p>
 </li>
-<li>No：调用valueForUndefinedKey:方法，抛出NSUnKnownKeyException异常</li>
-</ul>
+<li><p>在 block 中执行单例创建操作，创建成功后将 dispatch_once_t 结构体的值修改为非 0 值。</p>
 </li>
 </ul>
-</li>
-</ul>
-<h5 id="赋值顺序">赋值顺序</h5>
-<ul>
-<li>按照setKey、_setKey顺序查找方法<ul>
-<li>找到方法：传递参数，调用方法</li>
-<li>未找到：查看accessInstanceVariablesDirectly方法返回值，默认为Yes；方法意思是是否允许直接访问成员变量。<ul>
-<li>Yes：按照_key、_isKey、key、isKey的顺序查找<ul>
-<li>找到直接赋值</li>
-<li>未找到</li>
-</ul>
-</li>
-<li>No：调用setValue:forUndefinedKey:方法，抛出NSUnKnownKeyException异常</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="kvo">KVO</h2>
-<h5 id="原理">原理</h5>
-<ul>
-<li>利用Runtime机制功态生成个子类，并且让instance对象的isa指针指向这个全新的类</li>
-<li>当修改instance对象的属性时，会调用foundation的_NSSetXXXValueAndNotify函数</li>
-<li>调用顺序<ul>
-<li>willChangeValueForKey:</li>
-<li>setValue:</li>
-<li>didChangeValueForKey:</li>
-</ul>
-</li>
-<li>内部会触发监听器（Oberser）的监听方法</li>
-</ul>
-<h5 id="派生类重写方法">派生类重写方法</h5>
-<ul>
-<li>set方法：变化监听</li>
-<li>class：屏蔽方法实现</li>
-<li>dealloc：后续收尾</li>
-<li>＿isKvoA：</li>
-</ul>
-<h5 id="手动触发">手动触发</h5>
-<ul>
-<li>手动调用WillChangeValueForKey</li>
-<li>set方法赋值</li>
-<li>手动调用DidChangeValueForKey</li>
-</ul>
-<h5 id="问题">问题</h5>
-<ul>
-<li>直接修改属性不会执行属性监听方法</li>
-</ul>
+<p>完成上述两个步骤后，再次调用 dispatch_once 函数时，由于 dispatch_once_t 的值已经被修改为非 0 值，dispatch_once 函数将不会再次执行 block 中的内容，从而确保该单例只会被创建一次。</p>
+<h2 id="nsoperation">NSOperation</h2>
+<p>NSOperation 是建立在 GCD 之上的。NSOperation 的一些好处是，它有一个更友好的接口来处理 Dependencies（按特定顺序执行任务），它是可观察的（KVO 来观察属性），有暂停、取消、恢复和控制（你可以指定队列中任务的数量）。</p>
 
                                 
                                 </section>
@@ -475,12 +497,12 @@
 
             
                 
-                <a href="Category.html" class="navigation navigation-prev " aria-label="Previous page: Category">
+                <a href="Runloop.html" class="navigation navigation-prev " aria-label="Previous page: Runloop">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="性能优化.html" class="navigation navigation-next " aria-label="Next page: 性能优化">
+                <a href="Block.html" class="navigation navigation-next " aria-label="Next page: Block">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -491,7 +513,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"KVC&KVO","level":"1.4.6","depth":2,"next":{"title":"性能优化","level":"1.4.7","depth":2,"path":"Chapters/OC/性能优化.md","ref":"Chapters/OC/性能优化.md","articles":[]},"previous":{"title":"Category","level":"1.4.5","depth":2,"path":"Chapters/OC/Category.md","ref":"Chapters/OC/Category.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold","auto-scroll-table"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"auto-scroll-table":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/OC/KVO&KVC.md","mtime":"2024-03-20T11:00:23.255Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T11:00:42.405Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"多线程","level":"1.4.3","depth":2,"next":{"title":"Block","level":"1.4.4","depth":2,"path":"Chapters/OC/Block.md","ref":"Chapters/OC/Block.md","articles":[]},"previous":{"title":"Runloop","level":"1.4.2","depth":2,"path":"Chapters/OC/Runloop.md","ref":"Chapters/OC/Runloop.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold","auto-scroll-table"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"auto-scroll-table":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/OC/多线程.md","mtime":"2024-03-20T11:00:23.255Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T11:00:42.405Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
