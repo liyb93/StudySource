@@ -26,6 +26,13 @@ jobs:
           npm install -g gitbook-plugin-lightbox --save-dev
           npm install -g gitbook-plugin-hide-element --save-dev
           npm install -g gitbook-plugin-chapter-fold --save-dev
+      # 安装 calibre
+      - name: Install calibre
+        run: |
+          wget https://download.calibre-ebook.com/5.42.0/calibre-5.42.0-x86_64.txz
+          tar -xvf /tmp/calibre-5.42.0-x86_64.txz -C /opt/calibre/
+          ln -s /opt/calibre/calibre /usr/bin/calibre
+          ln -s /opt/calibre/ebook-convert /usr/bin/ebook-convert
       # 打包
       - name: Build
         run: honkit build
