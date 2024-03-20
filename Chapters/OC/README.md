@@ -147,7 +147,7 @@ struct Block_descriptor {
 | 区域              | block类型              | 存放数据类型                     |
 | ----------------- | ---------------------- | -------------------------------- |
 | 程序区域(.text区) |                        | 存放代码                         |
-| 数据区域(.date区) | _NSConcreteGlobalBlock | 全局变量存储的位置               |
+| 数据区域(.data区) | _NSConcreteGlobalBlock | 全局变量存储的位置               |
 | 堆                | _NSConcreteMallocBlock | alloc出的对象，手动释放          |
 | 栈                | _NSConcreteStackBlock  | 局部变量存放的位置，系统自动释放 |
 
