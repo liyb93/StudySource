@@ -3,7 +3,7 @@
 <html lang="zh-hans" >
     <head>
         <meta charset="UTF-8">
-        <title>Objective-C · iOS知识总结</title>
+        <title>Block · iOS知识总结</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="HonKit 5.1.4">
@@ -76,10 +76,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="Runtime.html" />
+    <link rel="next" href="Category.html" />
     
     
-    <link rel="prev" href="../计算机基础/" />
+    <link rel="prev" href="Runloop.html" />
     
 
     </head>
@@ -147,7 +147,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.4" data-path="./">
+        <li class="chapter " data-level="1.4" data-path="./">
             
                 <a href="./">
             
@@ -187,7 +187,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.3" data-path="Block.html">
+        <li class="chapter active" data-level="1.4.3" data-path="Block.html">
             
                 <a href="Block.html">
             
@@ -352,7 +352,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >Objective-C</a>
+        <a href="../.." >Block</a>
     </h1>
 </div>
 
@@ -367,51 +367,151 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="objective-c">Objective-C</h1>
-<h2 id="基础知识">基础知识</h2>
+                                <h1 id="block">Block</h1>
+<p>block本质上也是一个OC对象，它内部也有个isa指针</p>
+<p>block是封装了函数调用以及函数调用环境的OC对象</p>
+<pre><code class="lang-c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">Block_layout</span> {
+    <span class="hljs-type">void</span> *isa;
+    <span class="hljs-type">int</span> flags;
+    <span class="hljs-type">int</span> reserved;
+   <span class="hljs-comment">// block执行时调用的函数指针，block定义时内部的执行代码都在这个函数中</span>
+    <span class="hljs-built_in">void</span> (*invoke)(<span class="hljs-type">void</span> *, ...);
+    <span class="hljs-comment">// block的详细描述</span>
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">Block_descriptor</span> *descriptor;
+    <span class="hljs-comment">/* Imported variables. */</span>
+};
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Block_descriptor</span> {
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">int</span> reserved;
+    <span class="hljs-type">unsigned</span> <span class="hljs-type">long</span> <span class="hljs-type">int</span> size;
+    <span class="hljs-comment">// copy/dispose，辅助拷贝/销毁函数，处理block范围外的变量时使用</span>
+    <span class="hljs-built_in">void</span> (*copy)(<span class="hljs-type">void</span> *dst, <span class="hljs-type">void</span> *src);
+    <span class="hljs-built_in">void</span> (*dispose)(<span class="hljs-type">void</span> *);
+};
+</code></pre>
+<h2 id="block变量捕获">Block变量捕获</h2>
+<p>为了保证block内部能够正常访问外部的变量，block有个变量捕获机制</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">变量类型</th>
+<th style="text-align:center">捕获到block内部</th>
+<th style="text-align:center">访问方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">局部变量(auto)</td>
+<td style="text-align:center"><input type="checkbox" checked disabled></td>
+<td style="text-align:center">值传递</td>
+</tr>
+<tr>
+<td style="text-align:center">局部变量(static)</td>
+<td style="text-align:center"><input type="checkbox" checked disabled></td>
+<td style="text-align:center">指针传递</td>
+</tr>
+<tr>
+<td style="text-align:center">全局变量</td>
+<td style="text-align:center"><input type="checkbox" disabled></td>
+<td style="text-align:center">直接访问</td>
+</tr>
+</tbody>
+</table>
+<p>auto变量被捕获时直接传入的变量的值，而static变量被捕获时传入的是变量的地址，由于auto变量出了当前作用域内存就会被销毁，所以需要将auto变量的值捕获；</p>
+<p>static变量是一直存在内存中，但出了作用域就访问不了啦，所以只需要捕获static变量的内存地址就可以了；</p>
+<p>全局变量是不会被捕获的，因为全局变量在哪里都可以访问，不需要进行捕获。</p>
+<h2 id="block">__block</h2>
+<p><code>__block</code>修饰auto变量，在block内使用，block会把修饰的变量包装成对象，所以使用<code>__block</code>修饰的变量可以进行修改，这是因为block内使用的指针进行修改</p>
+<pre><code class="lang-c++"><span class="hljs-keyword">struct</span> 包装的属性对象 {
+    <span class="hljs-type">void</span> *isa;
+    <span class="hljs-comment">// 指向自己</span>
+    <span class="hljs-type">void</span> *forwarding;
+    <span class="hljs-type">int</span> flag;
+    <span class="hljs-type">int</span> size;
+    <span class="hljs-comment">// 修饰的变量</span>
+    ...
+};
+</code></pre>
 <ul>
-<li>一个NSObject对象占用多少内存？<ul>
-<li>系统分配了16个字节给NSObject对象（通过malloc_size函数获得）</li>
-<li>但NSObject对象内部只使用了8个字节的空间（64bit环境下，可以通过class_getInstanceSize函数获得）</li>
-</ul>
-</li>
-<li>对象的isa指针指向哪里？<ul>
-<li>instance对象的isa指向class对象</li>
-<li>class对象的isa指向meta-class对象</li>
-<li>meta-class对象的isa指向基类的meta-class对象</li>
-</ul>
-</li>
-<li>OC的类信息存放在哪里？<ul>
-<li>对象方法、属性、成员变量、协议信息，存放在class对象中</li>
-<li>类方法，存放在meta-class对象中</li>
-<li>成员变量的具体值，存放在instance对象</li>
-</ul>
-</li>
-<li>isa、superclass总结<ul>
-<li>instance的isa指向class</li>
-<li>class的isa指向meta-class</li>
-<li>meta-class的isa指向基类的meta-class</li>
-<li>class的superclass指向父类的class<ul>
-<li>如果没有父类，superclass指针为nil</li>
-</ul>
-</li>
-<li>meta-class的superclass指向父类的meta-class<ul>
-<li>基类的meta-class的superclass指向基类的class</li>
-</ul>
-</li>
-<li>instance调用对象方法的轨迹<ul>
-<li>isa找到class，方法不存在，就通过superclass找父类</li>
-</ul>
-</li>
-<li>class调用类方法的轨迹<ul>
-<li>isa找meta-class，方法不存在，就通过superclass找父类</li>
+<li>block在修改NSMutableArray时需要进行<code>__blcok</code>吗?<ul>
+<li>不需要，因为array使用的是指针修改，不存在无法修改的问题。</li>
 </ul>
 </li>
 </ul>
+<h2 id="copy修饰">copy修饰</h2>
+<p>block一旦没有进行copy操作,就不会在堆上,就无法控制block的生命周期</p>
+<p>在ARC环境下，编译器会根据情况自动将栈上的block复制到堆上，比如以下情况</p>
+<ul>
+<li><p>block作为函数返回值时<code>return ^{ } ;</code></p>
+</li>
+<li><p>将block赋值给__strong指针时<code>Block bolck = ^{ };</code></p>
+</li>
+<li><p>block作为Cocoa API中方法名含有usingBlock的方法参数时</p>
+<pre><code class="lang-objective-c">[array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+}] ;
+</code></pre>
+</li>
+<li><p>block作为GCD API的方法参数时</p>
+<pre><code class="lang-objective-c">dispatch_once(&amp;onceToken, ^{
+});
+</code></pre>
 </li>
 </ul>
-<h2 id="事件响应链">事件响应链</h2>
-<p>UIApplication 会触发 func sendEvent(_ event: UIEvent) 将一个封装好的 UIEvent 传给 UIWindow，也就是当前展示的 UIWindow，通常情况接下来会传给当前展示的 UIViewController，接下来传给 UIViewController 的根视图。这个过程是一条龙服务，没有分叉。但是在传递给当前 UIViewController 的根视图，然后在传递给controller的view,检测是否可接受事件，检测坐标是否在自己内部，遍历子视图，重复上面步骤，找到合适的控件进行响应事件。</p>
+<p>所以ARC下使用strong/copy都可以，MRC下编译器不会自动将栈上的block复制到堆上，所以只能使用copy</p>
+<h2 id="类型">类型</h2>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th style="text-align:left">介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NSGlobalBlock</td>
+<td style="text-align:left">没有访问auto变量的block，存放在数据段。调用copy什么都不做。</td>
+</tr>
+<tr>
+<td>NSStackBlock</td>
+<td style="text-align:left">访问auto变量,存放在栈中，注意ARC中测试时会显示为NSMallockBlock,这是因为编译器对block做了处理，关闭ARC即可。会自动销毁，所以需要用copy修饰，把block存到堆中</td>
+</tr>
+<tr>
+<td>NSMallocBlock</td>
+<td style="text-align:left">NSStackBlock调用copy；调用copy引用计数器加1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="应用程序的内存分配">应用程序的内存分配</h2>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>block类型</th>
+<th>存放数据类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>程序区域(.text区)</td>
+<td></td>
+<td>存放代码</td>
+</tr>
+<tr>
+<td>数据区域(.data区)</td>
+<td>_NSConcreteGlobalBlock</td>
+<td>全局变量存储的位置</td>
+</tr>
+<tr>
+<td>堆</td>
+<td>_NSConcreteMallocBlock</td>
+<td>alloc出的对象，手动释放</td>
+</tr>
+<tr>
+<td>栈</td>
+<td>_NSConcreteStackBlock</td>
+<td>局部变量存放的位置，系统自动释放</td>
+</tr>
+</tbody>
+</table>
 
                                 
                                 </section>
@@ -439,12 +539,12 @@
 
             
                 
-                <a href="../计算机基础/" class="navigation navigation-prev " aria-label="Previous page: 计算机基础">
+                <a href="Runloop.html" class="navigation navigation-prev " aria-label="Previous page: Runloop">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="Runtime.html" class="navigation navigation-next " aria-label="Next page: Runtime">
+                <a href="Category.html" class="navigation navigation-next " aria-label="Next page: Category">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -455,7 +555,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Objective-C","level":"1.4","depth":1,"next":{"title":"Runtime","level":"1.4.1","depth":2,"path":"Chapters/OC/Runtime.md","ref":"Chapters/OC/Runtime.md","articles":[]},"previous":{"title":"计算机基础","level":"1.3","depth":1,"path":"Chapters/计算机基础/README.md","ref":"Chapters/计算机基础/README.md","articles":[]},"articles":[{"title":"Runtime","level":"1.4.1","depth":2,"path":"Chapters/OC/Runtime.md","ref":"Chapters/OC/Runtime.md","articles":[]},{"title":"Runloop","level":"1.4.2","depth":2,"path":"Chapters/OC/Runloop.md","ref":"Chapters/OC/Runloop.md","articles":[]},{"title":"Block","level":"1.4.3","depth":2,"path":"Chapters/OC/Block.md","ref":"Chapters/OC/Block.md","articles":[]},{"title":"Category","level":"1.4.4","depth":2,"path":"Chapters/OC/Category.md","ref":"Chapters/OC/Category.md","articles":[]},{"title":"KVC&KVO","level":"1.4.5","depth":2,"path":"Chapters/OC/KVO&KVC.md","ref":"Chapters/OC/KVO&KVC.md","articles":[]},{"title":"性能优化","level":"1.4.6","depth":2,"path":"Chapters/OC/性能优化.md","ref":"Chapters/OC/性能优化.md","articles":[]},{"title":"锁","level":"1.4.7","depth":2,"path":"Chapters/OC/锁.md","ref":"Chapters/OC/锁.md","articles":[]},{"title":"三方库","level":"1.4.8","depth":2,"path":"Chapters/OC/三方库.md","ref":"Chapters/OC/三方库.md","articles":[]}],"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/OC/README.md","mtime":"2024-03-20T08:31:46.419Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T08:31:59.292Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Block","level":"1.4.3","depth":2,"next":{"title":"Category","level":"1.4.4","depth":2,"path":"Chapters/OC/Category.md","ref":"Chapters/OC/Category.md","articles":[]},"previous":{"title":"Runloop","level":"1.4.2","depth":2,"path":"Chapters/OC/Runloop.md","ref":"Chapters/OC/Runloop.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/OC/Block.md","mtime":"2024-03-20T08:31:46.419Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T08:31:59.292Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

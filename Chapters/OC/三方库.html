@@ -3,7 +3,7 @@
 <html lang="zh-hans" >
     <head>
         <meta charset="UTF-8">
-        <title>Objective-C · iOS知识总结</title>
+        <title>三方库 · iOS知识总结</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="HonKit 5.1.4">
@@ -76,10 +76,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="Runtime.html" />
+    <link rel="next" href="../Swift/" />
     
     
-    <link rel="prev" href="../计算机基础/" />
+    <link rel="prev" href="锁.html" />
     
 
     </head>
@@ -147,7 +147,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.4" data-path="./">
+        <li class="chapter " data-level="1.4" data-path="./">
             
                 <a href="./">
             
@@ -252,7 +252,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.8" data-path="三方库.html">
+        <li class="chapter active" data-level="1.4.8" data-path="三方库.html">
             
                 <a href="三方库.html">
             
@@ -352,7 +352,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >Objective-C</a>
+        <a href="../.." >三方库</a>
     </h1>
 </div>
 
@@ -367,51 +367,63 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="objective-c">Objective-C</h1>
-<h2 id="基础知识">基础知识</h2>
+                                <h1 id="三方库">三方库</h1>
+<h2 id="sdwebimage">SDWebImage</h2>
+<h5 id="原理解析">原理解析</h5>
 <ul>
-<li>一个NSObject对象占用多少内存？<ul>
-<li>系统分配了16个字节给NSObject对象（通过malloc_size函数获得）</li>
-<li>但NSObject对象内部只使用了8个字节的空间（64bit环境下，可以通过class_getInstanceSize函数获得）</li>
+<li>入口 setImageWithURL:placeholderImage:options:会先把 placeholderImage显示，然后 SDWebImageManager根据 URL 开始处理图片。（以URL的MD5值作为key）</li>
+<li>进入SDImageCache从内存缓存查找SDImageCacheDelegate回调给SDWebImageManager，然后通过NSDWebImageManagerDelegate回调展示</li>
+<li>如果内存缓存中没有，生成 ｀NSOperation｀添加到队列，开始从硬盘（Disk）查找图片是否已经下载<ul>
+<li>有： 回主线程进行结果回调 NotifyDelegate，将图片添加到内存缓存中SDImageCache，再回调展示</li>
+<li>无： 共享或重新生成一个SDWebImageDownloader下载图片，由 NSURLSession实现相关 delegate，来判断图片下载中、下载完成和下载失败。</li>
 </ul>
 </li>
-<li>对象的isa指针指向哪里？<ul>
-<li>instance对象的isa指向class对象</li>
-<li>class对象的isa指向meta-class对象</li>
-<li>meta-class对象的isa指向基类的meta-class对象</li>
+<li>下载完后，放入硬盘，加入缓存，再回调展示</li>
 </ul>
-</li>
-<li>OC的类信息存放在哪里？<ul>
-<li>对象方法、属性、成员变量、协议信息，存放在class对象中</li>
-<li>类方法，存放在meta-class对象中</li>
-<li>成员变量的具体值，存放在instance对象</li>
+<h5 id="sdwebimage缓存为什么使用maptable">SDWebImage缓存为什么使用MapTable</h5>
+<ul>
+<li>NSMaptable是可变的，没有不可变的类</li>
+<li>可以持有键和值的弱引用，当键值当中的一个被释放时，整个这一项都会移除掉</li>
+<li>可以对成员进行copy操作</li>
+<li>可以存储任意的指针，通过指针来进行相等性和散列检查</li>
 </ul>
-</li>
-<li>isa、superclass总结<ul>
-<li>instance的isa指向class</li>
-<li>class的isa指向meta-class</li>
-<li>meta-class的isa指向基类的meta-class</li>
-<li>class的superclass指向父类的class<ul>
-<li>如果没有父类，superclass指针为nil</li>
+<h2 id="afnetworking">AFNetworking</h2>
+<h5 id="框架核心">框架核心</h5>
+<h6 id="nsurlsession">NSURLSession</h6>
+<ul>
+<li>AFURLSessionManager</li>
+<li>AFHTTPSessionManager</li>
 </ul>
-</li>
-<li>meta-class的superclass指向父类的meta-class<ul>
-<li>基类的meta-class的superclass指向基类的class</li>
+<h6 id="序列化反序列化">序列化/反序列化</h6>
+<ul>
+<li>AFURLRequestSerialization上传的数据转换成JSON格式</li>
+<li>AFJSONResponseSerializer JSON解析器</li>
 </ul>
-</li>
-<li>instance调用对象方法的轨迹<ul>
-<li>isa找到class，方法不存在，就通过superclass找父类</li>
+<h6 id="安全协议">安全协议</h6>
+<ul>
+<li>AFSecurityPolicy 是针对 HTTPS的 服务</li>
 </ul>
-</li>
-<li>class调用类方法的轨迹<ul>
-<li>isa找meta-class，方法不存在，就通过superclass找父类</li>
+<h6 id="网络管理器">网络管理器</h6>
+<ul>
+<li>AFNetworkReachabilityManager，网络状态检测</li>
 </ul>
-</li>
+<h6 id="uikit">UIKit</h6>
+<ul>
+<li>提供了网络请求过程中与UI界面显示相关的操作接口 ActivityIndicator、UIAlertView、UIButton、UIImageView、UIprogressView、UIWebView</li>
 </ul>
-</li>
+<h5 id="请求过程">请求过程</h5>
+<ul>
+<li>初始化会话管理类：AFURLSessionManager</li>
+<li>配置会话模式类型：NSURLSessionConfig</li>
+<li>创建任务Task对象，启动任务</li>
+<li>通过KVO监听download进度和upload进度</li>
+<li>由任务代理回调处理：AFURLSessionmanagerTaskDelegate，数据响应，错误响应</li>
 </ul>
-<h2 id="事件响应链">事件响应链</h2>
-<p>UIApplication 会触发 func sendEvent(_ event: UIEvent) 将一个封装好的 UIEvent 传给 UIWindow，也就是当前展示的 UIWindow，通常情况接下来会传给当前展示的 UIViewController，接下来传给 UIViewController 的根视图。这个过程是一条龙服务，没有分叉。但是在传递给当前 UIViewController 的根视图，然后在传递给controller的view,检测是否可接受事件，检测坐标是否在自己内部，遍历子视图，重复上面步骤，找到合适的控件进行响应事件。</p>
+<h2 id="mjextension">MJExtension</h2>
+<ul>
+<li>NSString、NSData 转化成JSON对象：(NSDictionary本身就是json对象) [keyValuesArray mj_JSONObject]</li>
+<li>遍历属性，返回属性列表，映射成对象MJProperty。 在Block回调中可以获取到每一个MJProperty（封装的属性） 通过单例做属性缓存</li>
+</ul>
 
                                 
                                 </section>
@@ -439,12 +451,12 @@
 
             
                 
-                <a href="../计算机基础/" class="navigation navigation-prev " aria-label="Previous page: 计算机基础">
+                <a href="锁.html" class="navigation navigation-prev " aria-label="Previous page: 锁">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="Runtime.html" class="navigation navigation-next " aria-label="Next page: Runtime">
+                <a href="../Swift/" class="navigation navigation-next " aria-label="Next page: Swift">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -455,7 +467,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Objective-C","level":"1.4","depth":1,"next":{"title":"Runtime","level":"1.4.1","depth":2,"path":"Chapters/OC/Runtime.md","ref":"Chapters/OC/Runtime.md","articles":[]},"previous":{"title":"计算机基础","level":"1.3","depth":1,"path":"Chapters/计算机基础/README.md","ref":"Chapters/计算机基础/README.md","articles":[]},"articles":[{"title":"Runtime","level":"1.4.1","depth":2,"path":"Chapters/OC/Runtime.md","ref":"Chapters/OC/Runtime.md","articles":[]},{"title":"Runloop","level":"1.4.2","depth":2,"path":"Chapters/OC/Runloop.md","ref":"Chapters/OC/Runloop.md","articles":[]},{"title":"Block","level":"1.4.3","depth":2,"path":"Chapters/OC/Block.md","ref":"Chapters/OC/Block.md","articles":[]},{"title":"Category","level":"1.4.4","depth":2,"path":"Chapters/OC/Category.md","ref":"Chapters/OC/Category.md","articles":[]},{"title":"KVC&KVO","level":"1.4.5","depth":2,"path":"Chapters/OC/KVO&KVC.md","ref":"Chapters/OC/KVO&KVC.md","articles":[]},{"title":"性能优化","level":"1.4.6","depth":2,"path":"Chapters/OC/性能优化.md","ref":"Chapters/OC/性能优化.md","articles":[]},{"title":"锁","level":"1.4.7","depth":2,"path":"Chapters/OC/锁.md","ref":"Chapters/OC/锁.md","articles":[]},{"title":"三方库","level":"1.4.8","depth":2,"path":"Chapters/OC/三方库.md","ref":"Chapters/OC/三方库.md","articles":[]}],"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/OC/README.md","mtime":"2024-03-20T08:31:46.419Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T08:31:59.292Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"三方库","level":"1.4.8","depth":2,"next":{"title":"Swift","level":"1.5","depth":1,"path":"Chapters/Swift/README.md","ref":"Chapters/Swift/README.md","articles":[]},"previous":{"title":"锁","level":"1.4.7","depth":2,"path":"Chapters/OC/锁.md","ref":"Chapters/OC/锁.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/OC/三方库.md","mtime":"2024-03-20T08:31:46.419Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T08:31:59.292Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

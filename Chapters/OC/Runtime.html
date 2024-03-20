@@ -1,0 +1,708 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <title>Runtime · iOS知识总结</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 5.1.4">
+        <meta name="author" content="liyb">
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search-pro/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-code/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-lightbox/css/lightbox.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-chapter-fold/chapter-fold.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="Runloop.html" />
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    前言
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../数据结构/">
+            
+                <a href="../数据结构/">
+            
+                    
+                    数据结构
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../计算机基础/">
+            
+                <a href="../计算机基础/">
+            
+                    
+                    计算机基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Objective-C
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.4.1" data-path="Runtime.html">
+            
+                <a href="Runtime.html">
+            
+                    
+                    Runtime
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="Runloop.html">
+            
+                <a href="Runloop.html">
+            
+                    
+                    Runloop
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="Block.html">
+            
+                <a href="Block.html">
+            
+                    
+                    Block
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="Category.html">
+            
+                <a href="Category.html">
+            
+                    
+                    Category
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="KVO&KVC.html">
+            
+                <a href="KVO&KVC.html">
+            
+                    
+                    KVC&KVO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="性能优化.html">
+            
+                <a href="性能优化.html">
+            
+                    
+                    性能优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="锁.html">
+            
+                <a href="锁.html">
+            
+                    
+                    锁
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="三方库.html">
+            
+                <a href="三方库.html">
+            
+                    
+                    三方库
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../Swift/">
+            
+                <a href="../Swift/">
+            
+                    
+                    Swift
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../SwiftUI/">
+            
+                <a href="../SwiftUI/">
+            
+                    
+                    SwiftUI
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../Flutter/">
+            
+                <a href="../Flutter/">
+            
+                    
+                    Flutter
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="../ReactNative/">
+            
+                <a href="../ReactNative/">
+            
+                    
+                    ReactNative
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            本书使用 HonKit 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >Runtime</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="runtime">Runtime</h1>
+<p>OC是一门动态性语言，允许很多操作在运行是进行操作</p>
+<p>OC的动态性就是靠runtime进行实现，runtime是一套C语言的API,封装了很多动态性相关的函数</p>
+<p>平时编写的OC代码，底层都是转成runtime api调用</p>
+<h3 id="具体应用">具体应用</h3>
+<ul>
+<li>利用关联对象给分类添加属性</li>
+<li>遍历类的所有成员变量（修改textfiled占位文字颜色、字典转模型、自动归档解档等）</li>
+<li>交换方法（替换系统方法实现）</li>
+<li>利用消息转发机制解决方法找不到的异常问题</li>
+</ul>
+<h3 id="objcclass和objcobject">objc_class和objc_object</h3>
+<pre><code class="lang-c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_object</span> {
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-type">isa_t</span> isa;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-comment">// function here</span>
+}
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_class</span> : objc_object {
+    Class superclass;
+    <span class="hljs-type">cache_t</span> cache;             <span class="hljs-comment">// formerly cache pointer and vtable</span>
+    <span class="hljs-type">class_data_bits_t</span> bits;
+      <span class="hljs-comment">// method here</span>
+}
+</code></pre>
+<ul>
+<li><p><strong>objc_object</strong> 定义在 <code>objc-private.h</code> 里面，该结构体只包含一个叫做 isa 的isa_t类型的变量</p>
+</li>
+<li><p><strong>objc_class</strong> 定义在 <code>objc-runtime-new.h</code> 里面，它继承自objc_object，所以除了isa成员变量之外，它还有：</p>
+<ul>
+<li><p>指向另一个objc_class结构体的指针 <strong>super_class</strong>；这一个objc_class包含了父类的信息</p>
+</li>
+<li><p>一个包含函数缓存的cache_t类型变量 <strong>cache</strong></p>
+</li>
+<li><p>一个包含类的方法，属性等信息的class_data_bits_t类型的变量 <strong>bits</strong></p>
+</li>
+</ul>
+</li>
+<li><p>编译结束之后，OC的每个类都是以objc_class的结构体形式存在于内存之中，而且在内存中的位置已经固定。运行期间，创建新的对象的时候，也是创建objc_object的结构体</p>
+</li>
+<li><p>总结：OC的对象和类在内存中都是以结构体的形式存在的，类对应objc_class结构体，对象对应objc_object结构体。</p>
+<p>在创建这两种结构体的过程中都会初始化isa变量。isa变量存放着对象所属的类的信息，或者类所属的元类的信息。</p>
+<p>另外，在创建objc_class的结构体的时候还会初始化相应的cache和bits变量</p>
+</li>
+</ul>
+<h3 id="classdatabitst">class_data_bits_t</h3>
+<pre><code class="lang-c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">class_data_bits_t</span> {
+    <span class="hljs-type">uintptr_t</span> bits;    <span class="hljs-comment">// 包含具体信息看下面表格</span>
+    <span class="hljs-comment">// method here</span>
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>is_swift</td>
+<td>第一个bit，判断类是否是Swift类</td>
+</tr>
+<tr>
+<td>has_default_rr</td>
+<td>第二个bit，判断当前类或者父类含有默认的<code>retain/release/autorelease/retainCount/_tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference</code> 方法</td>
+</tr>
+<tr>
+<td>require_raw_isa</td>
+<td>第三个bit， 判断当前类的实例是否需要raw_isa</td>
+</tr>
+<tr>
+<td>data</td>
+<td>第4-48位，存放一个指向class_rw_t结构体的指针，该结构体包含了该类的属性，方法，协议等信息。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="classrwt-和-classrot">class_rw_t 和 class_ro_t</h4>
+<pre><code class="lang-c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">class_rw_t</span> {
+    <span class="hljs-type">uint32_t</span> flags;
+    <span class="hljs-type">uint32_t</span> version;
+
+    <span class="hljs-type">const</span> <span class="hljs-type">class_ro_t</span> *ro;
+
+    <span class="hljs-type">method_array_t</span> methods;
+    <span class="hljs-type">property_array_t</span> properties;
+    <span class="hljs-type">protocol_array_t</span> protocols;
+
+    Class firstSubclass;
+    Class nextSiblingClass;
+};
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">class_ro_t</span> {
+    <span class="hljs-type">uint32_t</span> flags;
+    <span class="hljs-type">uint32_t</span> instanceStart;
+    <span class="hljs-type">uint32_t</span> instanceSize;
+    <span class="hljs-type">uint32_t</span> reserved;
+
+    <span class="hljs-type">const</span> <span class="hljs-type">uint8_t</span> * ivarLayout;
+
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> * name;
+    <span class="hljs-type">method_list_t</span> * baseMethodList;
+    <span class="hljs-type">protocol_list_t</span> * baseProtocols;
+    <span class="hljs-type">const</span> <span class="hljs-type">ivar_list_t</span> * ivars;
+
+    <span class="hljs-type">const</span> <span class="hljs-type">uint8_t</span> * weakIvarLayout;
+    <span class="hljs-type">property_list_t</span> *baseProperties;
+};
+</code></pre>
+<p>class_rw_t结构体内有一个指向class_ro_t结构体的指针。每个类都对应有一个class_ro_t结构体和一个class_rw_t结构体。在编译期间，class_ro_t结构体就已经确定，objc_class中的bits的data部分存放着该结构体的地址。在runtime运行之后，具体说来是在运行runtime的<code>realizeClass</code> 方法时，会生成class_rw_t结构体，该结构体包含了class_ro_t，并且更新data部分，换成class_rw_t结构体的地址。</p>
+<p>类的<code>realizeClass</code>运行之前：</p>
+<p><a href="../../sources/before_bits.png" data-lightbox="f03782fe-7fee-4da2-83fe-58cad7e25123" data-title><img src="../../sources/before_bits.png" alt></a></p>
+<p>类的<code>realizeClass</code>运行之后：</p>
+<p><a href="../../sources/after_bits.png" data-lightbox="2fa68574-67d1-40ac-8e29-137cddd2ab31" data-title><img src="../../sources/after_bits.png" alt></a></p>
+<p>细看两个结构体的成员变量会发现很多相同的地方，他们都存放着当前类的属性、实例变量、方法、协议等等。区别在于：class_ro_t存放的是编译期间就确定的；而class_rw_t是在runtime时才确定，它会先将class_ro_t的内容拷贝过去，然后再将当前类的分类的这些属性、方法等拷贝到其中。所以可以说class_rw_t是class_ro_t的超集，当然实际访问类的方法、属性等也都是访问的class_rw_t中的内容</p>
+<h3 id="isa">isa</h3>
+<ul>
+<li>在arm64架构之前，isa就是一个普通的指针，存储着Class、Meta-Class对象的内存地址</li>
+<li>从arm64架构开始，对isa进行了优化，使用一个64位的共用体（union）结构存储数据，其中的33位存储内存地址，其余存储其他数据</li>
+</ul>
+<pre><code class="lang-c++"><span class="hljs-keyword">union</span> <span class="hljs-title class_">isa_t</span> {
+    Class cls;
+    <span class="hljs-type">uintptr_t</span> bits;
+    <span class="hljs-keyword">struct</span> {
+    <span class="hljs-comment">/*
+        0，代表普通的指针，存储着Class、Meta-Class对象的内存地址
+        1，代表优化过，使用位域存储更多的信息
+    */</span>
+        <span class="hljs-type">uintptr_t</span> nonpointer; 
+        <span class="hljs-comment">// 是否有设置过关联对象，如果没有，释放时会更快</span>
+        <span class="hljs-type">uintptr_t</span> has_assoc;
+        <span class="hljs-comment">// 是否有C++的析构函数（.cxx_destruct），如果没有，释放时会更快</span>
+        <span class="hljs-type">uintptr_t</span> has_cxx_dtor;
+        <span class="hljs-comment">// 存储着Class、Meta-Class对象的内存地址信息</span>
+        <span class="hljs-type">uintptr_t</span> shiftcls;
+        <span class="hljs-comment">// 用于在调试时分辨对象是否未完成初始化</span>
+        <span class="hljs-type">uintptr_t</span> magic;
+        <span class="hljs-comment">// 是否有被弱引用指向过，如果没有，释放时会更快</span>
+        <span class="hljs-type">uintptr_t</span> weakly_referenced;
+        <span class="hljs-comment">// 对象是否正在释放</span>
+        <span class="hljs-type">uintptr_t</span> deallocating;
+        <span class="hljs-comment">/*
+            引用计数器是否过大无法存储在isa中
+            如果为1，那么引用计数会存储在一个叫SideTable的类的属性中
+        */</span> 
+        <span class="hljs-type">uintptr_t</span> has_sidetable_rc;
+        <span class="hljs-comment">// 里面存储的值是引用计数器减1</span>
+        <span class="hljs-type">uintptr_t</span> extra_rc;
+    }
+}
+</code></pre>
+<h3 id="消息转发机制">消息转发机制</h3>
+<h4 id="消息发送">消息发送</h4>
+<ul>
+<li>检测receiver(接收者)是否为nil,为nil退出</li>
+<li>receiver通过isa指针找到receiverClass</li>
+<li>receiverClass的cache中查找方法，找到调用方法，结束查找</li>
+<li>receiverClass的class_rw_t中查找方法,找到方法，调用方法并把方法缓存到receiverClass的cache中，结束查找。</li>
+<li>receiverClass通过superclass指针找到superClass，重复上面步骤</li>
+</ul>
+<h4 id="动态分析">动态分析</h4>
+<ul>
+<li>是否曾经有动态解析，有的话直接消息转发</li>
+<li>调用+resolveInstanceMethod或+resolveClassMethod来动态解析方法</li>
+<li>标记为已动态解析</li>
+<li>动态解析过后，会重新走“消息发送”的流程(从receiverClass的cache中查找方法)</li>
+</ul>
+<h4 id="消息转发">消息转发</h4>
+<ul>
+<li>调用forwardingTargetForSelector:检测是否有备用接收者<ul>
+<li>返回值不为nil,执行objc_msgSend(返回值, SEL)</li>
+<li>为nil，调用methodSignatureForSelector进行签名<ul>
+<li>不为nil, 调用forwardInvocation:方法</li>
+<li>为nil，调用doesNotRecognizeSelector</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="weak原理">weak原理</h3>
+<ul>
+<li>runtime维持了一个weak表；当一个对象obj被weak指针指向时，这个weak指针会以obj的指针作为key，存储到sideTable类的weak_table这个散列表上对应的一个weak指针数组里面。 当一个对象obj的dealloc方法被调用时，Runtime会以obj的指针为key，从sideTable的weak_table散列表中，找出对应的weak指针列表，然后将里面的weak指针逐个置为nil</li>
+</ul>
+<pre><code class="lang-c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">SideTable</span> {
+    <span class="hljs-comment">// 保证原子操作的自旋锁</span>
+    <span class="hljs-type">spinlock_t</span> slock;
+    <span class="hljs-comment">// 引用计数的 hash 表</span>
+    RefcountMap refcnts;
+    <span class="hljs-comment">// weak 引用全局 hash 表</span>
+    <span class="hljs-type">weak_table_t</span> weak_table;
+}
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">weak_table_t</span> {
+    <span class="hljs-comment">// 保存了所有指向指定对象的 weak 指针</span>
+    <span class="hljs-type">weak_entry_t</span> *weak_entries;
+    <span class="hljs-comment">// 存储空间</span>
+    <span class="hljs-type">size_t</span>    num_entries;
+    <span class="hljs-comment">// 参与判断引用计数辅助量</span>
+    <span class="hljs-type">uintptr_t</span> mask;
+    <span class="hljs-comment">// hash key 最大偏移值</span>
+    <span class="hljs-type">uintptr_t</span> max_hash_displacement;
+}
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev " aria-label="Previous page: Objective-C">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="Runloop.html" class="navigation navigation-next " aria-label="Next page: Runloop">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Runtime","level":"1.4.1","depth":2,"next":{"title":"Runloop","level":"1.4.2","depth":2,"path":"Chapters/OC/Runloop.md","ref":"Chapters/OC/Runloop.md","articles":[]},"previous":{"title":"Objective-C","level":"1.4","depth":1,"path":"Chapters/OC/README.md","ref":"Chapters/OC/README.md","articles":[{"title":"Runtime","level":"1.4.1","depth":2,"path":"Chapters/OC/Runtime.md","ref":"Chapters/OC/Runtime.md","articles":[]},{"title":"Runloop","level":"1.4.2","depth":2,"path":"Chapters/OC/Runloop.md","ref":"Chapters/OC/Runloop.md","articles":[]},{"title":"Block","level":"1.4.3","depth":2,"path":"Chapters/OC/Block.md","ref":"Chapters/OC/Block.md","articles":[]},{"title":"Category","level":"1.4.4","depth":2,"path":"Chapters/OC/Category.md","ref":"Chapters/OC/Category.md","articles":[]},{"title":"KVC&KVO","level":"1.4.5","depth":2,"path":"Chapters/OC/KVO&KVC.md","ref":"Chapters/OC/KVO&KVC.md","articles":[]},{"title":"性能优化","level":"1.4.6","depth":2,"path":"Chapters/OC/性能优化.md","ref":"Chapters/OC/性能优化.md","articles":[]},{"title":"锁","level":"1.4.7","depth":2,"path":"Chapters/OC/锁.md","ref":"Chapters/OC/锁.md","articles":[]},{"title":"三方库","level":"1.4.8","depth":2,"path":"Chapters/OC/三方库.md","ref":"Chapters/OC/三方库.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/OC/Runtime.md","mtime":"2024-03-20T08:31:46.419Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T08:31:59.292Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search-pro/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-expandable-chapters-small/expandable-chapters-small.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lightbox/js/lightbox.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-hide-element/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-chapter-fold/chapter-fold.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

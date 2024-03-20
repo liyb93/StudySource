@@ -3,7 +3,7 @@
 <html lang="zh-hans" >
     <head>
         <meta charset="UTF-8">
-        <title>Objective-C · iOS知识总结</title>
+        <title>Category · iOS知识总结</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="HonKit 5.1.4">
@@ -76,10 +76,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="Runtime.html" />
+    <link rel="next" href="KVO&KVC.html" />
     
     
-    <link rel="prev" href="../计算机基础/" />
+    <link rel="prev" href="Block.html" />
     
 
     </head>
@@ -147,7 +147,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.4" data-path="./">
+        <li class="chapter " data-level="1.4" data-path="./">
             
                 <a href="./">
             
@@ -200,7 +200,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.4" data-path="Category.html">
+        <li class="chapter active" data-level="1.4.4" data-path="Category.html">
             
                 <a href="Category.html">
             
@@ -352,7 +352,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >Objective-C</a>
+        <a href="../.." >Category</a>
     </h1>
 </div>
 
@@ -367,51 +367,72 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="objective-c">Objective-C</h1>
-<h2 id="基础知识">基础知识</h2>
+                                <h1 id="category">Category</h1>
+<p>主要使用在方法拆分、不改变原类的基础上增加方法、属性等。</p>
+<pre><code class="lang-c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">category_t</span>{
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name;   <span class="hljs-comment">// 扩展类名</span>
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_class_t</span> *cls;   <span class="hljs-comment">// </span>
+    <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_method_list_t</span> *instance_methods;  <span class="hljs-comment">// 对象方法列表</span>
+    <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_method_list_t</span> *class_methods; <span class="hljs-comment">// 类方法类别</span>
+    <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_protoclo_list_t</span> *protocols  <span class="hljs-comment">// 协议列表</span>
+    <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_prop_list_t</span> *properties;    <span class="hljs-comment">// 属性列表</span>
+}
+</code></pre>
+<h2 id="加载过程">加载过程</h2>
 <ul>
-<li>一个NSObject对象占用多少内存？<ul>
-<li>系统分配了16个字节给NSObject对象（通过malloc_size函数获得）</li>
-<li>但NSObject对象内部只使用了8个字节的空间（64bit环境下，可以通过class_getInstanceSize函数获得）</li>
+<li>通过runtime加载某个类的所有Category数据</li>
+<li>把所有的Category方法、属性、协议合并到一个新数组中</li>
+<li>将合并后的分类数据插入到类原有的数据前面</li>
+</ul>
+<p>注：因为分类数据是插入到类原有数据前面，所以调用属性、方法、协议等都优先调用分类中的数据。</p>
+<h2 id="与extension区别">与Extension区别</h2>
+<ul>
+<li>Category是在运行时才把分类数据添加进类信息中</li>
+<li>Extension编译是就把数据添加进类信息中</li>
+</ul>
+<h2 id="load">load</h2>
+<ul>
+<li>load方法会在runtime加载类、分类时调用</li>
+<li>每个类、分类的+load,在程序运行过程中只调用一次</li>
+</ul>
+<p>注：分类的+load不会覆盖类的+load</p>
+<h5 id="调用顺序">调用顺序</h5>
+<ul>
+<li>先调用类的+load<ul>
+<li>按编译先后顺序调用（先编译先调用）</li>
+<li>调用子类的+load之前会先调用父类的+load</li>
 </ul>
 </li>
-<li>对象的isa指针指向哪里？<ul>
-<li>instance对象的isa指向class对象</li>
-<li>class对象的isa指向meta-class对象</li>
-<li>meta-class对象的isa指向基类的meta-class对象</li>
-</ul>
-</li>
-<li>OC的类信息存放在哪里？<ul>
-<li>对象方法、属性、成员变量、协议信息，存放在class对象中</li>
-<li>类方法，存放在meta-class对象中</li>
-<li>成员变量的具体值，存放在instance对象</li>
-</ul>
-</li>
-<li>isa、superclass总结<ul>
-<li>instance的isa指向class</li>
-<li>class的isa指向meta-class</li>
-<li>meta-class的isa指向基类的meta-class</li>
-<li>class的superclass指向父类的class<ul>
-<li>如果没有父类，superclass指针为nil</li>
-</ul>
-</li>
-<li>meta-class的superclass指向父类的meta-class<ul>
-<li>基类的meta-class的superclass指向基类的class</li>
-</ul>
-</li>
-<li>instance调用对象方法的轨迹<ul>
-<li>isa找到class，方法不存在，就通过superclass找父类</li>
-</ul>
-</li>
-<li>class调用类方法的轨迹<ul>
-<li>isa找meta-class，方法不存在，就通过superclass找父类</li>
+<li>再调用分类的+load<ul>
+<li>按编译先后顺序调用（先编译先调用）</li>
 </ul>
 </li>
 </ul>
-</li>
+<h2 id="initialize">initialize</h2>
+<ul>
+<li>initialize方法会在类第一次接收到消息时调用</li>
 </ul>
-<h2 id="事件响应链">事件响应链</h2>
-<p>UIApplication 会触发 func sendEvent(_ event: UIEvent) 将一个封装好的 UIEvent 传给 UIWindow，也就是当前展示的 UIWindow，通常情况接下来会传给当前展示的 UIViewController，接下来传给 UIViewController 的根视图。这个过程是一条龙服务，没有分叉。但是在传递给当前 UIViewController 的根视图，然后在传递给controller的view,检测是否可接受事件，检测坐标是否在自己内部，遍历子视图，重复上面步骤，找到合适的控件进行响应事件。</p>
+<h6 id="调用顺序">调用顺序</h6>
+<ul>
+<li>先调用父类的+initialize,再调用子类的+initialize(子类不存在时不调用)</li>
+<li>先初始化父类，在初始化子类，每个类只初始化一次</li>
+</ul>
+<h2 id="load与initialize">load与initialize</h2>
+<ul>
+<li>+initialize是通过objc_msgSend进行调用；+load是根据函数地址直接调用。</li>
+<li>如果子类没有实现+initialize，会调用父类的+initialize，所以父类的+initialize可能会调用多次</li>
+<li>如果分类实现的+initialize，就覆盖类本身的+initialize调用</li>
+</ul>
+<h2 id="成员变量">成员变量</h2>
+<ul>
+<li>不能直接给Category添加成员变量，因为Category结构中没有属性列表，但是可以通过runtime的关联机制实现相同的效果</li>
+</ul>
+<h2 id="属性关联">属性关联</h2>
+<ul>
+<li>关联对象并不是存储在被关联对象本身内存中</li>
+<li>关联对象存储在全局的统一的一个AssociationsManager中</li>
+<li>设置关联对象为nil，就相当于是移除关联对象</li>
+</ul>
 
                                 
                                 </section>
@@ -439,12 +460,12 @@
 
             
                 
-                <a href="../计算机基础/" class="navigation navigation-prev " aria-label="Previous page: 计算机基础">
+                <a href="Block.html" class="navigation navigation-prev " aria-label="Previous page: Block">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="Runtime.html" class="navigation navigation-next " aria-label="Next page: Runtime">
+                <a href="KVO&KVC.html" class="navigation navigation-next " aria-label="Next page: KVC&KVO">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -455,7 +476,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Objective-C","level":"1.4","depth":1,"next":{"title":"Runtime","level":"1.4.1","depth":2,"path":"Chapters/OC/Runtime.md","ref":"Chapters/OC/Runtime.md","articles":[]},"previous":{"title":"计算机基础","level":"1.3","depth":1,"path":"Chapters/计算机基础/README.md","ref":"Chapters/计算机基础/README.md","articles":[]},"articles":[{"title":"Runtime","level":"1.4.1","depth":2,"path":"Chapters/OC/Runtime.md","ref":"Chapters/OC/Runtime.md","articles":[]},{"title":"Runloop","level":"1.4.2","depth":2,"path":"Chapters/OC/Runloop.md","ref":"Chapters/OC/Runloop.md","articles":[]},{"title":"Block","level":"1.4.3","depth":2,"path":"Chapters/OC/Block.md","ref":"Chapters/OC/Block.md","articles":[]},{"title":"Category","level":"1.4.4","depth":2,"path":"Chapters/OC/Category.md","ref":"Chapters/OC/Category.md","articles":[]},{"title":"KVC&KVO","level":"1.4.5","depth":2,"path":"Chapters/OC/KVO&KVC.md","ref":"Chapters/OC/KVO&KVC.md","articles":[]},{"title":"性能优化","level":"1.4.6","depth":2,"path":"Chapters/OC/性能优化.md","ref":"Chapters/OC/性能优化.md","articles":[]},{"title":"锁","level":"1.4.7","depth":2,"path":"Chapters/OC/锁.md","ref":"Chapters/OC/锁.md","articles":[]},{"title":"三方库","level":"1.4.8","depth":2,"path":"Chapters/OC/三方库.md","ref":"Chapters/OC/三方库.md","articles":[]}],"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/OC/README.md","mtime":"2024-03-20T08:31:46.419Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T08:31:59.292Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Category","level":"1.4.4","depth":2,"next":{"title":"KVC&KVO","level":"1.4.5","depth":2,"path":"Chapters/OC/KVO&KVC.md","ref":"Chapters/OC/KVO&KVC.md","articles":[]},"previous":{"title":"Block","level":"1.4.3","depth":2,"path":"Chapters/OC/Block.md","ref":"Chapters/OC/Block.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/OC/Category.md","mtime":"2024-03-20T08:31:46.419Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T08:31:59.292Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
