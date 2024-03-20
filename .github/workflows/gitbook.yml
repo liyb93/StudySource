@@ -26,6 +26,7 @@ jobs:
           npm install -g gitbook-plugin-lightbox --save-dev
           npm install -g gitbook-plugin-hide-element --save-dev
           npm install -g gitbook-plugin-chapter-fold --save-dev
+          npm install -g gitbook-plugin-auto-scroll-table --save-dev
       # 打包
       - name: Build
         run: honkit build

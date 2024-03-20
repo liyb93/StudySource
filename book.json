@@ -17,7 +17,8 @@
         "code",
         "lightbox",
         "hide-element",
-        "chapter-fold"
+        "chapter-fold",
+        "auto-scroll-table"
     ],
     "pluginsConfig": {
         "github": {

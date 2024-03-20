@@ -71,14 +71,14 @@ block一旦没有进行copy操作,就不会在堆上,就无法控制block的生�
 
 - block作为Cocoa API中方法名含有usingBlock的方法参数时
 
-  ```objective-c
+  ```objc
   [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
   }] ;
   ```
 
 - block作为GCD API的方法参数时
 
-  ```objective-c
+  ```objc
   dispatch_once(&onceToken, ^{
   });
   ```
