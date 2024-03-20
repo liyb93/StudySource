@@ -32,6 +32,14 @@
                 
             
                 
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-lightbox/css/lightbox.min.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-chapter-fold/chapter-fold.css">
+                
+            
+                
                 <link rel="stylesheet" href="../../gitbook/@honkit/honkit-plugin-highlight/website.css">
                 
             
@@ -673,42 +681,148 @@ struct Block_descriptor {
 <li>交换方法（替换系统方法实现）</li>
 <li>利用消息转发机制解决方法找不到的异常问题</li>
 </ul>
+<h3 id="objcclass和objcobject">objc_class和objc_object</h3>
+<pre><code class="lang-c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_object</span> {
+<span class="hljs-keyword">private</span>:
+    <span class="hljs-type">isa_t</span> isa;
+<span class="hljs-keyword">public</span>:
+    <span class="hljs-comment">// function here</span>
+}
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">objc_class</span> : objc_object {
+    Class superclass;
+    <span class="hljs-type">cache_t</span> cache;             <span class="hljs-comment">// formerly cache pointer and vtable</span>
+    <span class="hljs-type">class_data_bits_t</span> bits;
+      <span class="hljs-comment">// method here</span>
+}
+</code></pre>
+<ul>
+<li><p><strong>objc_object</strong> 定义在 <code>objc-private.h</code> 里面，该结构体只包含一个叫做 isa 的isa_t类型的变量</p>
+</li>
+<li><p><strong>objc_class</strong> 定义在 <code>objc-runtime-new.h</code> 里面，它继承自objc_object，所以除了isa成员变量之外，它还有：</p>
+<ul>
+<li><p>指向另一个objc_class结构体的指针 <strong>super_class</strong>；这一个objc_class包含了父类的信息</p>
+</li>
+<li><p>一个包含函数缓存的cache_t类型变量 <strong>cache</strong></p>
+</li>
+<li><p>一个包含类的方法，属性等信息的class_data_bits_t类型的变量 <strong>bits</strong></p>
+</li>
+</ul>
+</li>
+<li><p>编译结束之后，OC的每个类都是以objc_class的结构体形式存在于内存之中，而且在内存中的位置已经固定。运行期间，创建新的对象的时候，也是创建objc_object的结构体</p>
+</li>
+<li><p>总结：OC的对象和类在内存中都是以结构体的形式存在的，类对应objc_class结构体，对象对应objc_object结构体。</p>
+<p>在创建这两种结构体的过程中都会初始化isa变量。isa变量存放着对象所属的类的信息，或者类所属的元类的信息。</p>
+<p>另外，在创建objc_class的结构体的时候还会初始化相应的cache和bits变量</p>
+</li>
+</ul>
+<h3 id="classdatabitst">class_data_bits_t</h3>
+<pre><code class="lang-c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">class_data_bits_t</span> {
+    <span class="hljs-type">uintptr_t</span> bits;    <span class="hljs-comment">// 包含具体信息看下面表格</span>
+    <span class="hljs-comment">// method here</span>
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>is_swift</td>
+<td>第一个bit，判断类是否是Swift类</td>
+</tr>
+<tr>
+<td>has_default_rr</td>
+<td>第二个bit，判断当前类或者父类含有默认的<code>retain/release/autorelease/retainCount/_tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference</code> 方法</td>
+</tr>
+<tr>
+<td>require_raw_isa</td>
+<td>第三个bit， 判断当前类的实例是否需要raw_isa</td>
+</tr>
+<tr>
+<td>data</td>
+<td>第4-48位，存放一个指向class_rw_t结构体的指针，该结构体包含了该类的属性，方法，协议等信息。</td>
+</tr>
+</tbody>
+</table>
+<h4 id="classrwt-和-classrot">class_rw_t 和 class_ro_t</h4>
+<pre><code class="lang-c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">class_rw_t</span> {
+    <span class="hljs-type">uint32_t</span> flags;
+    <span class="hljs-type">uint32_t</span> version;
+
+    <span class="hljs-type">const</span> <span class="hljs-type">class_ro_t</span> *ro;
+
+    <span class="hljs-type">method_array_t</span> methods;
+    <span class="hljs-type">property_array_t</span> properties;
+    <span class="hljs-type">protocol_array_t</span> protocols;
+
+    Class firstSubclass;
+    Class nextSiblingClass;
+};
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">class_ro_t</span> {
+    <span class="hljs-type">uint32_t</span> flags;
+    <span class="hljs-type">uint32_t</span> instanceStart;
+    <span class="hljs-type">uint32_t</span> instanceSize;
+    <span class="hljs-type">uint32_t</span> reserved;
+
+    <span class="hljs-type">const</span> <span class="hljs-type">uint8_t</span> * ivarLayout;
+
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> * name;
+    <span class="hljs-type">method_list_t</span> * baseMethodList;
+    <span class="hljs-type">protocol_list_t</span> * baseProtocols;
+    <span class="hljs-type">const</span> <span class="hljs-type">ivar_list_t</span> * ivars;
+
+    <span class="hljs-type">const</span> <span class="hljs-type">uint8_t</span> * weakIvarLayout;
+    <span class="hljs-type">property_list_t</span> *baseProperties;
+};
+</code></pre>
+<p>class_rw_t结构体内有一个指向class_ro_t结构体的指针。每个类都对应有一个class_ro_t结构体和一个class_rw_t结构体。在编译期间，class_ro_t结构体就已经确定，objc_class中的bits的data部分存放着该结构体的地址。在runtime运行之后，具体说来是在运行runtime的<code>realizeClass</code> 方法时，会生成class_rw_t结构体，该结构体包含了class_ro_t，并且更新data部分，换成class_rw_t结构体的地址。</p>
+<p>类的<code>realizeClass</code>运行之前：</p>
+<p><a href="../../sources/before_bits.png" data-lightbox="37cde474-ba44-4198-981a-dca0b96c9435" data-title><img src="../../sources/before_bits.png" alt></a></p>
+<p>类的<code>realizeClass</code>运行之后：</p>
+<p><a href="../../sources/after_bits.png" data-lightbox="92fad6c8-ffe2-421b-902e-35a1777933cb" data-title><img src="../../sources/after_bits.png" alt></a></p>
+<p>细看两个结构体的成员变量会发现很多相同的地方，他们都存放着当前类的属性、实例变量、方法、协议等等。区别在于：class_ro_t存放的是编译期间就确定的；而class_rw_t是在runtime时才确定，它会先将class_ro_t的内容拷贝过去，然后再将当前类的分类的这些属性、方法等拷贝到其中。所以可以说class_rw_t是class_ro_t的超集，当然实际访问类的方法、属性等也都是访问的class_rw_t中的内容</p>
 <h3 id="isa">isa</h3>
 <ul>
 <li>在arm64架构之前，isa就是一个普通的指针，存储着Class、Meta-Class对象的内存地址</li>
 <li>从arm64架构开始，对isa进行了优化，使用一个64位的共用体（union）结构存储数据，其中的33位存储内存地址，其余存储其他数据</li>
 </ul>
-<pre><code>union isa_t {
+<pre><code class="lang-c++"><span class="hljs-keyword">union</span> <span class="hljs-title class_">isa_t</span> {
     Class cls;
-    uintptr_t bits;
-    struct {
-    /*
+    <span class="hljs-type">uintptr_t</span> bits;
+    <span class="hljs-keyword">struct</span> {
+    <span class="hljs-comment">/*
         0，代表普通的指针，存储着Class、Meta-Class对象的内存地址
         1，代表优化过，使用位域存储更多的信息
-    */
-        uintptr_t nonpointer; 
-        // 是否有设置过关联对象，如果没有，释放时会更快
-        uintptr_t has_assoc;
-        // 是否有C++的析构函数（.cxx_destruct），如果没有，释放时会更快
-        uintptr_t has_cxx_dtor;
-        // 存储着Class、Meta-Class对象的内存地址信息
-        uintptr_t shiftcls;
-        // 用于在调试时分辨对象是否未完成初始化
-        uintptr_t magic;
-        // 是否有被弱引用指向过，如果没有，释放时会更快
-        uintptr_t weakly_referenced;
-        // 对象是否正在释放
-        uintptr_t deallocating;
-        /*
+    */</span>
+        <span class="hljs-type">uintptr_t</span> nonpointer; 
+        <span class="hljs-comment">// 是否有设置过关联对象，如果没有，释放时会更快</span>
+        <span class="hljs-type">uintptr_t</span> has_assoc;
+        <span class="hljs-comment">// 是否有C++的析构函数（.cxx_destruct），如果没有，释放时会更快</span>
+        <span class="hljs-type">uintptr_t</span> has_cxx_dtor;
+        <span class="hljs-comment">// 存储着Class、Meta-Class对象的内存地址信息</span>
+        <span class="hljs-type">uintptr_t</span> shiftcls;
+        <span class="hljs-comment">// 用于在调试时分辨对象是否未完成初始化</span>
+        <span class="hljs-type">uintptr_t</span> magic;
+        <span class="hljs-comment">// 是否有被弱引用指向过，如果没有，释放时会更快</span>
+        <span class="hljs-type">uintptr_t</span> weakly_referenced;
+        <span class="hljs-comment">// 对象是否正在释放</span>
+        <span class="hljs-type">uintptr_t</span> deallocating;
+        <span class="hljs-comment">/*
             引用计数器是否过大无法存储在isa中
             如果为1，那么引用计数会存储在一个叫SideTable的类的属性中
-        */ 
-        uintptr_t has_sidetable_rc;
-        // 里面存储的值是引用计数器减1
-        uintptr_t extra_rc;
+        */</span> 
+        <span class="hljs-type">uintptr_t</span> has_sidetable_rc;
+        <span class="hljs-comment">// 里面存储的值是引用计数器减1</span>
+        <span class="hljs-type">uintptr_t</span> extra_rc;
     }
 }
-</code></pre><h3 id="消息转发机制">消息转发机制</h3>
+</code></pre>
+<h3 id="消息转发机制">消息转发机制</h3>
 <h4 id="消息发送">消息发送</h4>
 <ul>
 <li>检测receiver(接收者)是否为nil,为nil退出</li>
@@ -995,7 +1109,7 @@ struct weak_table_t {
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Objective-C","level":"1.4","depth":1,"next":{"title":"Swift","level":"1.5","depth":1,"path":"Chapters/Swift/README.md","ref":"Chapters/Swift/README.md","articles":[]},"previous":{"title":"计算机基础","level":"1.3","depth":1,"path":"Chapters/计算机基础/README.md","ref":"Chapters/计算机基础/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/liyb93"},"search-pro":{},"expandable-chapters-small":{},"back-to-top-button":{},"code":{"copyButtons":true},"highlight":{},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"3.2.3","description":"iOS知识总结"},"file":{"path":"Chapters/OC/README.md","mtime":"2024-03-20T03:13:19.652Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T03:13:39.181Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Objective-C","level":"1.4","depth":1,"next":{"title":"Swift","level":"1.5","depth":1,"path":"Chapters/Swift/README.md","ref":"Chapters/Swift/README.md","articles":[]},"previous":{"title":"计算机基础","level":"1.3","depth":1,"path":"Chapters/计算机基础/README.md","ref":"Chapters/计算机基础/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/OC/README.md","mtime":"2024-03-20T07:56:36.215Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T07:56:47.895Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -1066,6 +1180,18 @@ struct weak_table_t {
     
         
         <script src="../../gitbook/gitbook-plugin-code/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lightbox/js/lightbox.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-hide-element/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-chapter-fold/chapter-fold.js"></script>
         
     
         
