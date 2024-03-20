@@ -12,24 +12,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
+      # 安装honkit
       - name: Install Honkit CLI
         run: npm install -g honkit --save-dev
-
+      # 安装插件
       - name: Install Honkit Plugins
         run: |
-          npm install -g gitbook-plugin-lunr --save-dev
-          npm install -g gitbook-plugin-search --save-dev
           npm install -g gitbook-plugin-search-pro --save-dev
           npm install -g gitbook-plugin-expandable-chapters-small --save-dev
           npm install -g gitbook-plugin-back-to-top-button --save-dev
-          npm install -g gitbook-plugin-sharing --save-dev
           npm install -g gitbook-plugin-github --save-dev
           npm install -g gitbook-plugin-code --save-dev
-
+          npm install -g gitbook-plugin-lightbox --save-dev
+          npm install -g gitbook-plugin-hide-element --save-dev
+          npm install -g gitbook-plugin-chapter-fold --save-dev
+      # 打包
       - name: Build
         run: honkit build
-
+      # 生成电子书
+      - name: EBook
+        run: |
+        honkit pdf ./ ./books/book.pdf
+        honkit epub ./ ./books/book.epub
+        honkit mobi ./ ./books/book.mobi
+      # 推送到gh-pages分支
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:

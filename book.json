@@ -4,7 +4,7 @@
     "author": "liyb",
     "output.name": "site",
     "language": "zh-hans",
-    "gitbook": "3.2.3",
+    "gitbook": "5.1.4",
     "root": ".",
     "plugins": [
         "-lunr",
@@ -14,11 +14,25 @@
         "back-to-top-button",
         "-sharing",
         "github",
-        "code"
+        "code",
+        "lightbox",
+        "hide-element",
+        "chapter-fold"
     ],
     "pluginsConfig": {
         "github": {
             "url": "https://github.com/liyb93"
+        },
+        "hide-element": {
+            "elements": [".gitbook-link"]
+        }
+    },
+    "lightbox": {
+        "includeJQuery": false,
+        "sameUuid": true,
+        "options": {
+            "resizeDuration": 500,
+            "wrapAround": false
         }
     }
 }
