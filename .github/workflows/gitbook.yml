@@ -26,22 +26,9 @@ jobs:
           npm install -g gitbook-plugin-lightbox --save-dev
           npm install -g gitbook-plugin-hide-element --save-dev
           npm install -g gitbook-plugin-chapter-fold --save-dev
-      # 安装 calibre
-      - name: Install calibre
-        run: |
-          wget https://download.calibre-ebook.com/5.42.0/calibre-5.42.0-x86_64.txz
-          tar -xvf calibre-5.42.0-x86_64.txz -C /opt/
-          sudo ln -s /opt/calibre /usr/bin/calibre
-          sudo ln -s /opt/calibre/ebook-convert /usr/bin/ebook-convert
       # 打包
       - name: Build
         run: honkit build
-      # 生成电子书
-      - name: EBook
-        run: |
-          honkit pdf ./ ./books/book.pdf
-          honkit epub ./ ./books/book.epub
-          honkit mobi ./ ./books/book.mobi
       # 推送到gh-pages分支
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
