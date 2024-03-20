@@ -30,8 +30,8 @@ jobs:
       - name: Install calibre
         run: |
           wget https://download.calibre-ebook.com/5.42.0/calibre-5.42.0-x86_64.txz
-          tar -xvf calibre-5.42.0-x86_64.txz -C /opt/calibre/
-          ln -s /opt/calibre/calibre /usr/bin/calibre
+          tar -xvf calibre-5.42.0-x86_64.txz -C /opt/
+          ln -s /opt/calibre /usr/bin/calibre
           ln -s /opt/calibre/ebook-convert /usr/bin/ebook-convert
       # 打包
       - name: Build
