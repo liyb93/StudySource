@@ -1,0 +1,38 @@
+name: GitBook Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Honkit CLI
+        run: npm install -g honkit --save-dev
+
+      - name: Install Honkit Plugins
+        run: |
+          npm install -g gitbook-plugin-lunr --save-dev
+          npm install -g gitbook-plugin-search --save-dev
+          npm install -g gitbook-plugin-search-pro --save-dev
+          npm install -g gitbook-plugin-expandable-chapters-small --save-dev
+          npm install -g gitbook-plugin-back-to-top-button --save-dev
+          npm install -g gitbook-plugin-sharing --save-dev
+          npm install -g gitbook-plugin-github --save-dev
+          npm install -g gitbook-plugin-code --save-dev
+
+      - name: Build
+        run: honkit build
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: _book
+          token: ${{ secrets.DEPLOY_SECRET }}
