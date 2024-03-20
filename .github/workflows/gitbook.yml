@@ -32,9 +32,9 @@ jobs:
       # 生成电子书
       - name: EBook
         run: |
-        honkit pdf ./ ./books/book.pdf
-        honkit epub ./ ./books/book.epub
-        honkit mobi ./ ./books/book.mobi
+          honkit pdf ./ ./books/book.pdf
+          honkit epub ./ ./books/book.epub
+          honkit mobi ./ ./books/book.mobi
       # 推送到gh-pages分支
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
