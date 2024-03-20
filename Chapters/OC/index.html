@@ -364,6 +364,11 @@ struct Block_descriptor {
 </tr>
 </tbody>
 </table>
+<ul>
+<li>auto变量被捕获时直接传入的变量的值，而static变量被捕获时传入的是变量的地址，由于auto变量出了当前作用域内存就会被销毁，所以需要将auto变量的值捕获；</li>
+<li>static变量是一直存在内存中，但出了作用域就访问不了啦，所以只需要捕获static变量的内存地址就可以了；</li>
+<li>全局变量是不会被捕获的，因为全局变量在哪里都可以访问，不需要进行捕获。</li>
+</ul>
 <h3 id="block">__block</h3>
 <h4 id="原理">原理</h4>
 <ul>
@@ -386,15 +391,30 @@ struct Block_descriptor {
 </ul>
 <h3 id="copy修饰">copy修饰</h3>
 <ul>
-<li>在ARC环境下，编译器会根据情况自动将栈上的block复制到堆上，比如以下情况<ul>
-<li>block作为函数返回值时</li>
-<li>将block赋值给__strong指针时</li>
-<li>block作为Cocoa API中方法名含有usingBlock的方法参数时</li>
-<li>block作为GCD API的方法参数时</li>
-<li>ARC下使用strong/copy都可以</li>
+<li><p>block一旦没有进行copy操作,就不会在堆上,就无法控制block的生命周期</p>
+</li>
+<li><p>在ARC环境下，编译器会根据情况自动将栈上的block复制到堆上，比如以下情况</p>
+<ul>
+<li><p>block作为函数返回值时<code>return ^{ } ;</code></p>
+</li>
+<li><p>将block赋值给__strong指针时<code>Block bolck = ^{ };</code></p>
+</li>
+<li><p>block作为Cocoa API中方法名含有usingBlock的方法参数时</p>
+<pre><code class="lang-objective-c">[array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+}] ;
+</code></pre>
+</li>
+<li><p>block作为GCD API的方法参数时</p>
+<pre><code class="lang-objective-c">dispatch_once(&amp;onceToken, ^{
+});
+</code></pre>
+</li>
 </ul>
 </li>
-<li>MRC下只能使用copy</li>
+<li><p>ARC下使用strong/copy都可以</p>
+</li>
+<li><p>MRC下编译器不会自动将栈上的block复制到堆上，所以只能使用copy</p>
+</li>
 </ul>
 <h3 id="类型">类型</h3>
 <table>
@@ -416,6 +436,38 @@ struct Block_descriptor {
 <tr>
 <td>NSMallocBlock</td>
 <td style="text-align:left">NSStackBlock调用copy；调用copy引用计数器加1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="应用程序的内存分配">应用程序的内存分配</h3>
+<table>
+<thead>
+<tr>
+<th>区域</th>
+<th>block类型</th>
+<th>存放数据类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>程序区域(.text区)</td>
+<td></td>
+<td>存放代码</td>
+</tr>
+<tr>
+<td>数据区域(.date区)</td>
+<td>_NSConcreteGlobalBlock</td>
+<td>全局变量存储的位置</td>
+</tr>
+<tr>
+<td>堆</td>
+<td>_NSConcreteMallocBlock</td>
+<td>alloc出的对象，手动释放</td>
+</tr>
+<tr>
+<td>栈</td>
+<td>_NSConcreteStackBlock</td>
+<td>局部变量存放的位置，系统自动释放</td>
 </tr>
 </tbody>
 </table>
@@ -943,7 +995,7 @@ struct weak_table_t {
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Objective-C","level":"1.4","depth":1,"next":{"title":"Swift","level":"1.5","depth":1,"path":"Chapters/Swift/README.md","ref":"Chapters/Swift/README.md","articles":[]},"previous":{"title":"计算机基础","level":"1.3","depth":1,"path":"Chapters/计算机基础/README.md","ref":"Chapters/计算机基础/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/liyb93"},"search-pro":{},"expandable-chapters-small":{},"back-to-top-button":{},"code":{"copyButtons":true},"highlight":{},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"3.2.3","description":"iOS知识总结"},"file":{"path":"Chapters/OC/README.md","mtime":"2024-03-20T02:36:32.335Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T02:36:43.241Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Objective-C","level":"1.4","depth":1,"next":{"title":"Swift","level":"1.5","depth":1,"path":"Chapters/Swift/README.md","ref":"Chapters/Swift/README.md","articles":[]},"previous":{"title":"计算机基础","level":"1.3","depth":1,"path":"Chapters/计算机基础/README.md","ref":"Chapters/计算机基础/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/liyb93"},"search-pro":{},"expandable-chapters-small":{},"back-to-top-button":{},"code":{"copyButtons":true},"highlight":{},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"3.2.3","description":"iOS知识总结"},"file":{"path":"Chapters/OC/README.md","mtime":"2024-03-20T03:13:19.652Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-20T03:13:39.181Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
