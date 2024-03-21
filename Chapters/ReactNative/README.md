@@ -5,7 +5,11 @@
 
 ## React Native与ReactJS有什么不同？
 
-- 主要区别。 - 语法。React Native和ReactJS都使用JSX，但ReactJS使用HTML标签，而React Native不使用。 - 导航。React Native使用自己的内置导航库，而ReactJS使用react-router。 - 动画。ReactJS使用CSS动画。React Native使用其动画API。 - DOM。ReactJS使用部分刷新的虚拟DOM。React Native在渲染UI组件时需要使用其本地API。 - 用法。ReactJS主要用于Web应用开发，而React Native则专注于移动应用。
+- 语法：React Native和ReactJS都使用JSX，但ReactJS使用HTML标签，而React Native不使用。 
+- 导航：React Native使用自己的内置导航库，而ReactJS使用react-router。 
+- 动画：ReactJS使用CSS动画。React Native使用其动画API。 
+- DOM：ReactJS使用部分刷新的虚拟DOM。React Native在渲染UI组件时需要使用其本地API。 
+- 用法：ReactJS主要用于Web应用开发，而React Native则专注于移动应用。
 
 ## 什么是JSX？
 

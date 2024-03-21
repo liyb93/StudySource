@@ -76,8 +76,64 @@
 
 ## future和steam有什么不一样？
 
-- Future 用于处理单个异步操作
-- Stream 用来处理连续的异步操作
+### Future
+
+表示一个指定类型的异步操作结果，当一个返回 future 对象的函数被调用时，主要是分两部分执行。
+
+- 运行状态：会将这个函数放入队列等待执行并返回一个未完成的Future对象
+
+- 完成状态：当函数操作执行完成，Future对象就会携带一个值变成完成状态
+
+```dart
+static future1() {
+    Future future = Future(() {
+      MyUtil.toPrint('我是第一个future'); //1
+    });
+  	future.then((value) => MyUtil.toPrint('我是future的then')); //2
+  	MyUtil.toPrint('future1方法体'); //3
+  	//print:312
+}
+```
+
+### Stream
+
+Stream就是流，主要是把事件放在流上面去处理，也是用来处理异步操作的，而Stream所用的设计模式则是观察者模式。
+
+```dart
+static stream2() {
+    Stream stream = Stream.fromFutures([
+      getFuture(1, 500, '我是第1个Future'),
+      getFuture(2, 500, '我是第2个Future'),
+      getFuture(3, 500, '我是第3个Future')
+    ]);
+    stream.listen((event) {
+      toPrint('event:$event');
+    },onDone: (){
+      toPrint('执行完成');
+    });
+}
+
+static getFuture(int type, int ms, String resultStr) {
+    return Future.delayed(Duration(milliseconds: ms)).then((value) {
+      toPrint('第$type个future执行完毕');
+      return resultStr;
+    });
+}
+/*
+第1个future执行完毕
+event:我是第1个Future
+第2个future执行完毕
+event:我是第2个Future
+第3个future执行完毕
+event:我是第3个Future
+执行完成
+*/ 
+```
+
+### 总结
+
+Stream和Future都是用于接收异步事件数据，但是Future是表示单个计算结果的异步封装，而Stream表示的是多个序列化事件的异步封装
+ Stream可以接收多个异步操作的结果。 也就是说，在执行异步任务时，可以通过多次触发成功或失败事件来传递结果数据或错误异常。所以Stream常用于会多次读取数据的异步任务场景，如网络内容下载、文件读写。
 
 ## Widget、Element、RenderObject、Layer都有什么关系？
 
@@ -146,10 +202,6 @@
 
 - Flutter Engine层会创建一个Isolate，并且Dart代码默认就运行在这个主Isolate上。必要时可以使用spawnUri和spawn两种方式来创建新的Isolate，在Flutter中，新创建的Isolate由Flutter进行统一的管理。 事实上，Flutter Engine自己不创建和管理线程，Flutter Engine线程的创建和管理是Embeder负责的，Embeder指的是将引擎移植到平台的中间层代码，Flutter Engine层的架构示意图如下图所示。 在Flutter的架构中，Embeder提供四个Task Runner，分别是Platform Task Runner、UI Task Runner Thread、GPU Task Runner和IO Task Runner，每个Task Runner负责不同的任务，Flutter Engine不在乎Task Runner运行在哪个线程，但是它需要线程在整个生命周期里面保持稳定。
 
-## Future和Isolate有什么区别？
-
-- future是异步编程，调用本身立即返回，并在稍后的某个时候执行完成时再获得返回结果。在普通代码中可以使用await 等待一个异步调用结束。 isolate是并发编程，Dartm有并发时的共享状态，所有Dart代码都在isolate中运行，包括最初的main()。每个isolate都有它自己的堆内存，意味着其中所有内存数据，包括全局数据，都仅对该isolate可见，它们之间的通信只能通过传递消息的机制完成，消息则通过端口(port)收发。isolate只是一个概念，具体取决于如何实现，比如在Dart VM中一个isolate可能会是一个线程，在Web中可能会是一个Web Worker。
-
 ## Navigator? MaterialApp做了什么？
 
 - Navigator是在Flutter中负责管理维护页面堆栈的导航器
@@ -157,4 +209,26 @@
 
 ## Flutter的理念架构
 
-- Flutter框架自下而上分为Embedder、Engine和Framework三层。其中，Embedder是操作系统适配层，实现了渲染 Surface设置，线程设置，以及平台插件等平台相关特性的适配；Engine层负责图形绘制、文字排版和提供Dart运行时，Engine层具有独立虚拟机，正是由于它的存在，Flutter程序才能运行在不同的平台上，实现跨平台运行；Framework层则是使用Dart编写的一套基础视图库，包含了动画、图形绘制和手势识别等功能，是使用频率最高的一层。
+- Flutter框架自下而上分为Embedder、Engine和Framework三层。
+- Embedder是操作系统适配层，实现了渲染 Surface设置，线程设置，以及平台插件等平台相关特性的适配；
+- Engine层负责图形绘制、文字排版和提供Dart运行时，Engine层具有独立虚拟机，正是由于它的存在，Flutter程序才能运行在不同的平台上，实现跨平台运行；
+- Framework层则是使用Dart编写的一套基础视图库，包含了动画、图形绘制和手势识别等功能，是使用频率最高的一层。
+
+## Isolate
+
+Dart是一个单线程语言，它的"线程"概念被称为 `Isolate`，中文意思是隔离。
+
+- 特点：
+  - 它与我们之前理解的 Thread 概念有所不同，各个 isolate 之间是无法共享内存空间。
+  - Isolate是完全是独立的执行线，每个都有自己的 event loop。只能通过 Port 传递消息，所以它的资源开销低于线程。
+  - Dart中的线程可以理解为微线程。
+  - Future实现异步串行多个任务；Isolate可以实现异步并行多个任务
+- 作用：
+   Flutter的代码都是默认跑在root isolate上的，将非常耗时的任务添加到event loop后，会拖慢整个事件循环的处理，甚至是阻塞。可见基于Event loop的异步模型仍然是有很大缺点的，这时候我们就需要Isolate。
+
+- 使用场景
+  - Dart中使用多线程计算的时候，在创建Isolate以及线程间数据传递中耗时要超过单线程，每当我们创建出来一个新的 Isolate 至少需要 2mb 左右的空间甚至更多，因此Isolate有合适的使用场景，不建议滥用Isolate。
+  - 那么应该在什么时候使用Future，什么时候使用Isolate呢？
+     一个最简单的判断方法是根据某些任务的平均时间来选择：
+     方法执行在几毫秒或十几毫秒左右的，应使用Future
+     如果一个任务需要几百毫秒或之上的，则建议创建单独的Isolate
