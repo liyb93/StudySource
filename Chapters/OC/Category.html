@@ -386,14 +386,14 @@
                                 
                                 <h1 id="category">Category</h1>
 <p>主要使用在方法拆分、不改变原类的基础上增加方法、属性等。</p>
-<pre><code class="lang-c++"><span class="hljs-keyword">struct</span> <span class="hljs-title class_">category_t</span>{
-    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name;   <span class="hljs-comment">// 扩展类名</span>
-    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_class_t</span> *cls;   <span class="hljs-comment">// </span>
-    <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_method_list_t</span> *instance_methods;  <span class="hljs-comment">// 对象方法列表</span>
-    <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_method_list_t</span> *class_methods; <span class="hljs-comment">// 类方法类别</span>
-    <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_protoclo_list_t</span> *protocols  <span class="hljs-comment">// 协议列表</span>
-    <span class="hljs-type">const</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">_prop_list_t</span> *properties;    <span class="hljs-comment">// 属性列表</span>
-}
+<pre><code class="lang-c++"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> <span class="hljs-title class_">category_t</span> {
+    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *name;<span class="hljs-comment">//类的名字 主类名字</span>
+    <span class="hljs-type">classref_t</span> cls;<span class="hljs-comment">//类</span>
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">method_list_t</span> *instanceMethods;<span class="hljs-comment">//实例方法的列表</span>
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">method_list_t</span> *classMethods;<span class="hljs-comment">//类方法的列表</span>
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">protocol_list_t</span> *protocols;<span class="hljs-comment">//所有协议的列表</span>
+    <span class="hljs-keyword">struct</span> <span class="hljs-title class_">property_list_t</span> *instanceProperties;<span class="hljs-comment">//添加的所有属性</span>
+} <span class="hljs-type">category_t</span>;
 </code></pre>
 <h2 id="加载过程">加载过程</h2>
 <ul>
@@ -442,14 +442,32 @@
 </ul>
 <h2 id="成员变量">成员变量</h2>
 <ul>
-<li>不能直接给Category添加成员变量，因为Category结构中没有属性列表，但是可以通过runtime的关联机制实现相同的效果</li>
+<li>不能直接给Category添加成员变量，因为Category结构中没有成员变量列表</li>
+<li>结合category与原类的结合时机总结：分类并不会改变原有类的内存分布的情况，它是在运行期间决定的，此时内存的分布已经确定，若此时再添加实例会改变内存的分布情况，这对编译性语言是灾难，是不允许的。</li>
 </ul>
+<h2 id="方法和属性">方法和属性</h2>
+<p>方法和属性并不“属于”类实例，而成员变量“属于”类实例。我们所说的“类实例”概念，指的是一块内存区域，包含了isa指针和所有的成员变量。所以假如允许动态修改类成员变量布局，已经创建出的类实例就不符合类定义了，变成了无效对象。但方法定义是在objc_class中管理的，不管如何增删类方法，都不影响类实例的内存布局，已经创建出的类实例仍然可正常使用。</p>
 <h2 id="属性关联">属性关联</h2>
 <ul>
 <li>关联对象并不是存储在被关联对象本身内存中</li>
 <li>关联对象存储在全局的统一的一个AssociationsManager中</li>
 <li>设置关联对象为nil，就相当于是移除关联对象</li>
 </ul>
+<pre><code class="lang-objc"><span class="hljs-keyword">class</span> AssociationsManager {
+    <span class="hljs-keyword">static</span> OSSpinLock _lock;
+    <span class="hljs-keyword">static</span> AssociationsHashMap *_map;               <span class="hljs-comment">// associative references:  object pointer -&gt; PtrPtrHashMap.</span>
+public:
+    AssociationsManager()   { OSSpinLockLock(&amp;_lock); }
+    ~AssociationsManager()  { OSSpinLockUnlock(&amp;_lock); }
+
+    AssociationsHashMap &amp;associations() {
+        <span class="hljs-keyword">if</span> (_map == <span class="hljs-literal">NULL</span>)
+            _map = new AssociationsHashMap();
+        <span class="hljs-keyword">return</span> *_map;
+    }
+};
+</code></pre>
+<p>AssociationsManager里面是由一个静态AssociationsHashMap来存储所有的关联对象的。这相当于把所有对象的关联对象都存在一个全局map里面。而map的的key是这个对象的指针地址（任意两个不同对象的指针地址一定是不同的），而这个map的value又是另外一个AssociationsHashMap，里面保存了关联对象的键值对。</p>
 
                                 
                                 </section>
@@ -493,7 +511,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Category","level":"1.4.5","depth":2,"next":{"title":"KVC&KVO","level":"1.4.6","depth":2,"path":"Chapters/OC/KVO&KVC.md","ref":"Chapters/OC/KVO&KVC.md","articles":[]},"previous":{"title":"Block","level":"1.4.4","depth":2,"path":"Chapters/OC/Block.md","ref":"Chapters/OC/Block.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold","auto-scroll-table"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"auto-scroll-table":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/OC/Category.md","mtime":"2024-03-21T02:40:42.019Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-21T02:40:53.426Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Category","level":"1.4.5","depth":2,"next":{"title":"KVC&KVO","level":"1.4.6","depth":2,"path":"Chapters/OC/KVO&KVC.md","ref":"Chapters/OC/KVO&KVC.md","articles":[]},"previous":{"title":"Block","level":"1.4.4","depth":2,"path":"Chapters/OC/Block.md","ref":"Chapters/OC/Block.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold","auto-scroll-table"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"auto-scroll-table":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/OC/Category.md","mtime":"2024-03-21T03:15:44.614Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-21T03:15:58.650Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
