@@ -1,7 +1,7 @@
 # 文档下载
 
-[EPUB](books/book.epub)
+[EPUB](https://raw.githubusercontent.com/liyb93/StudySource/gh-pages/books/book.epub)
 
-[PDF](books/book.pdf)
+[PDF](https://raw.githubusercontent.com/liyb93/StudySource/gh-pages/books/book.pdf)
 
-[MOBI](books/book.mobi)
+[MOBI](https://raw.githubusercontent.com/liyb93/StudySource/gh-pages/books/book.mobi)
