@@ -464,10 +464,57 @@
 <li>async是和await搭配使用的，await只在async函数中出现。在async 函数里可以没有await或者有多个await。</li>
 </ul>
 <h2 id="future和steam有什么不一样？">future和steam有什么不一样？</h2>
+<h3 id="future">Future</h3>
+<p>表示一个指定类型的异步操作结果，当一个返回 future 对象的函数被调用时，主要是分两部分执行。</p>
 <ul>
-<li>Future 用于处理单个异步操作</li>
-<li>Stream 用来处理连续的异步操作</li>
+<li><p>运行状态：会将这个函数放入队列等待执行并返回一个未完成的Future对象</p>
+</li>
+<li><p>完成状态：当函数操作执行完成，Future对象就会携带一个值变成完成状态</p>
+</li>
 </ul>
+<pre><code class="lang-dart"><span class="hljs-keyword">static</span> future1() {
+    Future future = Future(() {
+      MyUtil.toPrint(<span class="hljs-string">&apos;我是第一个future&apos;</span>); <span class="hljs-comment">//1</span>
+    });
+      future.then((value) =&gt; MyUtil.toPrint(<span class="hljs-string">&apos;我是future的then&apos;</span>)); <span class="hljs-comment">//2</span>
+      MyUtil.toPrint(<span class="hljs-string">&apos;future1方法体&apos;</span>); <span class="hljs-comment">//3</span>
+      <span class="hljs-comment">//print:312</span>
+}
+</code></pre>
+<h3 id="stream">Stream</h3>
+<p>Stream就是流，主要是把事件放在流上面去处理，也是用来处理异步操作的，而Stream所用的设计模式则是观察者模式。</p>
+<pre><code class="lang-dart"><span class="hljs-keyword">static</span> stream2() {
+    Stream stream = Stream.fromFutures([
+      getFuture(<span class="hljs-number">1</span>, <span class="hljs-number">500</span>, <span class="hljs-string">&apos;我是第1个Future&apos;</span>),
+      getFuture(<span class="hljs-number">2</span>, <span class="hljs-number">500</span>, <span class="hljs-string">&apos;我是第2个Future&apos;</span>),
+      getFuture(<span class="hljs-number">3</span>, <span class="hljs-number">500</span>, <span class="hljs-string">&apos;我是第3个Future&apos;</span>)
+    ]);
+    stream.listen((event) {
+      toPrint(<span class="hljs-string">&apos;event:<span class="hljs-subst">$event</span>&apos;</span>);
+    },onDone: (){
+      toPrint(<span class="hljs-string">&apos;执行完成&apos;</span>);
+    });
+}
+
+<span class="hljs-keyword">static</span> getFuture(<span class="hljs-built_in">int</span> type, <span class="hljs-built_in">int</span> ms, <span class="hljs-built_in">String</span> resultStr) {
+    <span class="hljs-keyword">return</span> Future.delayed(<span class="hljs-built_in">Duration</span>(milliseconds: ms)).then((value) {
+      toPrint(<span class="hljs-string">&apos;第<span class="hljs-subst">$type</span>个future执行完毕&apos;</span>);
+      <span class="hljs-keyword">return</span> resultStr;
+    });
+}
+<span class="hljs-comment">/*
+第1个future执行完毕
+event:我是第1个Future
+第2个future执行完毕
+event:我是第2个Future
+第3个future执行完毕
+event:我是第3个Future
+执行完成
+*/</span>
+</code></pre>
+<h3 id="总结">总结</h3>
+<p>Stream和Future都是用于接收异步事件数据，但是Future是表示单个计算结果的异步封装，而Stream表示的是多个序列化事件的异步封装
+ Stream可以接收多个异步操作的结果。 也就是说，在执行异步任务时，可以通过多次触发成功或失败事件来传递结果数据或错误异常。所以Stream常用于会多次读取数据的异步任务场景，如网络内容下载、文件读写。</p>
 <h2 id="widget、element、renderobject、layer都有什么关系？">Widget、Element、RenderObject、Layer都有什么关系？</h2>
 <ul>
 <li>Widget会被inflate（填充）到Element，并由Element管理底层渲染树。Widget并不会直接管理状态及渲染,而是通过State这个对象来管理状态。Flutter创建Element的可见树，相对于Widget来说，是可变的，通常界面开发中，我们不用直接操作Element,而是由框架层实现内部逻辑。就如一个UI视图树中，可能包含有多个TextWidget(Widget被使用多次)，但是放在内部视图树的视角，这些TextWidget都是填充到一个个独立的Element中。Element会持有renderObject和widget的实例。记住，Widget 只是一个配置，RenderObject 负责管理布局、绘制等操作。 在第一次创建 Widget 的时候，会对应创建一个 Element， 然后将该元素插入树中。如果之后 Widget 发生了变化，则将其与旧的 Widget 进行比较，并且相应地更新 Element。重要的是，Element 不会被重建，只是更新而已。</li>
@@ -507,7 +554,7 @@
 <li>Dart 当中的 「..」意思是 「级联操作符」，为了方便配置而使用。「..」和「.」不同的是 调用「..」后返回的相当于是 this，而「.」返回的则是该方法返回的值 。</li>
 </ul>
 <h2 id="dart-是不是单线程模型？是如何运行的？">Dart 是不是单线程模型？是如何运行的？</h2>
-<p><a href="../../sources/6-1.png" data-lightbox="67eaf6d5-179c-4867-82ae-992ba2086f79" data-title><img src="../../sources/6-1.png" alt></a></p>
+<p><a href="../../sources/6-1.png" data-lightbox="ae6ca32a-92b9-41a1-a1b8-924f3ed2cf35" data-title><img src="../../sources/6-1.png" alt></a></p>
 <ul>
 <li>Dart 在单线程中是以消息循环机制来运行的，包含两个任务队列，一个是“微任务队列” microtask queue，另一个叫做“事件队列” event queue。</li>
 <li>当Flutter应用启动后，消息循环机制便启动了。首先会按照先进先出的顺序逐个执行微任务队列中的任务，当所有微任务队列执行完后便开始执行事件队列中的任务，事件任务执行完毕后再去执行微任务，如此循环往复，生生不息。</li>
@@ -534,10 +581,6 @@
 <ul>
 <li>Flutter Engine层会创建一个Isolate，并且Dart代码默认就运行在这个主Isolate上。必要时可以使用spawnUri和spawn两种方式来创建新的Isolate，在Flutter中，新创建的Isolate由Flutter进行统一的管理。 事实上，Flutter Engine自己不创建和管理线程，Flutter Engine线程的创建和管理是Embeder负责的，Embeder指的是将引擎移植到平台的中间层代码，Flutter Engine层的架构示意图如下图所示。 在Flutter的架构中，Embeder提供四个Task Runner，分别是Platform Task Runner、UI Task Runner Thread、GPU Task Runner和IO Task Runner，每个Task Runner负责不同的任务，Flutter Engine不在乎Task Runner运行在哪个线程，但是它需要线程在整个生命周期里面保持稳定。</li>
 </ul>
-<h2 id="future和isolate有什么区别？">Future和Isolate有什么区别？</h2>
-<ul>
-<li>future是异步编程，调用本身立即返回，并在稍后的某个时候执行完成时再获得返回结果。在普通代码中可以使用await 等待一个异步调用结束。 isolate是并发编程，Dartm有并发时的共享状态，所有Dart代码都在isolate中运行，包括最初的main()。每个isolate都有它自己的堆内存，意味着其中所有内存数据，包括全局数据，都仅对该isolate可见，它们之间的通信只能通过传递消息的机制完成，消息则通过端口(port)收发。isolate只是一个概念，具体取决于如何实现，比如在Dart VM中一个isolate可能会是一个线程，在Web中可能会是一个Web Worker。</li>
-</ul>
 <h2 id="navigator-materialapp做了什么？">Navigator? MaterialApp做了什么？</h2>
 <ul>
 <li>Navigator是在Flutter中负责管理维护页面堆栈的导航器</li>
@@ -545,7 +588,33 @@
 </ul>
 <h2 id="flutter的理念架构">Flutter的理念架构</h2>
 <ul>
-<li>Flutter框架自下而上分为Embedder、Engine和Framework三层。其中，Embedder是操作系统适配层，实现了渲染 Surface设置，线程设置，以及平台插件等平台相关特性的适配；Engine层负责图形绘制、文字排版和提供Dart运行时，Engine层具有独立虚拟机，正是由于它的存在，Flutter程序才能运行在不同的平台上，实现跨平台运行；Framework层则是使用Dart编写的一套基础视图库，包含了动画、图形绘制和手势识别等功能，是使用频率最高的一层。</li>
+<li>Flutter框架自下而上分为Embedder、Engine和Framework三层。</li>
+<li>Embedder是操作系统适配层，实现了渲染 Surface设置，线程设置，以及平台插件等平台相关特性的适配；</li>
+<li>Engine层负责图形绘制、文字排版和提供Dart运行时，Engine层具有独立虚拟机，正是由于它的存在，Flutter程序才能运行在不同的平台上，实现跨平台运行；</li>
+<li>Framework层则是使用Dart编写的一套基础视图库，包含了动画、图形绘制和手势识别等功能，是使用频率最高的一层。</li>
+</ul>
+<h2 id="isolate">Isolate</h2>
+<p>Dart是一个单线程语言，它的&quot;线程&quot;概念被称为 <code>Isolate</code>，中文意思是隔离。</p>
+<ul>
+<li>特点：<ul>
+<li>它与我们之前理解的 Thread 概念有所不同，各个 isolate 之间是无法共享内存空间。</li>
+<li>Isolate是完全是独立的执行线，每个都有自己的 event loop。只能通过 Port 传递消息，所以它的资源开销低于线程。</li>
+<li>Dart中的线程可以理解为微线程。</li>
+<li>Future实现异步串行多个任务；Isolate可以实现异步并行多个任务</li>
+</ul>
+</li>
+<li><p>作用：
+ Flutter的代码都是默认跑在root isolate上的，将非常耗时的任务添加到event loop后，会拖慢整个事件循环的处理，甚至是阻塞。可见基于Event loop的异步模型仍然是有很大缺点的，这时候我们就需要Isolate。</p>
+</li>
+<li><p>使用场景</p>
+<ul>
+<li>Dart中使用多线程计算的时候，在创建Isolate以及线程间数据传递中耗时要超过单线程，每当我们创建出来一个新的 Isolate 至少需要 2mb 左右的空间甚至更多，因此Isolate有合适的使用场景，不建议滥用Isolate。</li>
+<li>那么应该在什么时候使用Future，什么时候使用Isolate呢？
+ 一个最简单的判断方法是根据某些任务的平均时间来选择：
+ 方法执行在几毫秒或十几毫秒左右的，应使用Future
+ 如果一个任务需要几百毫秒或之上的，则建议创建单独的Isolate</li>
+</ul>
+</li>
 </ul>
 
                                 
@@ -590,7 +659,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Flutter","level":"1.7","depth":1,"next":{"title":"ReactNative","level":"1.8","depth":1,"path":"Chapters/ReactNative/README.md","ref":"Chapters/ReactNative/README.md","articles":[]},"previous":{"title":"SwiftUI","level":"1.6","depth":1,"path":"Chapters/SwiftUI/README.md","ref":"Chapters/SwiftUI/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold","auto-scroll-table"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"auto-scroll-table":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/Flutter/README.md","mtime":"2024-03-21T03:15:44.614Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-21T03:15:58.650Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Flutter","level":"1.7","depth":1,"next":{"title":"ReactNative","level":"1.8","depth":1,"path":"Chapters/ReactNative/README.md","ref":"Chapters/ReactNative/README.md","articles":[]},"previous":{"title":"SwiftUI","level":"1.6","depth":1,"path":"Chapters/SwiftUI/README.md","ref":"Chapters/SwiftUI/README.md","articles":[]},"dir":"ltr"},"config":{"plugins":["-lunr","-search","search-pro","expandable-chapters-small","back-to-top-button","-sharing","github","code","lightbox","hide-element","chapter-fold","auto-scroll-table"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"chapter-fold":{},"github":{"url":"https://github.com/liyb93"},"search-pro":{},"auto-scroll-table":{},"code":{"copyButtons":true},"hide-element":{"elements":[".gitbook-link"]},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"lightbox":{"jquery":true,"sameUuid":false},"back-to-top-button":{},"expandable-chapters-small":{},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"liyb","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"lightbox":{"includeJQuery":false,"sameUuid":true,"options":{"resizeDuration":500,"wrapAround":false}},"variables":{},"title":"iOS知识总结","language":"zh-hans","output.name":"site","gitbook":"5.1.4","description":"iOS知识总结"},"file":{"path":"Chapters/Flutter/README.md","mtime":"2024-03-21T06:51:32.586Z","type":"markdown"},"gitbook":{"version":"5.1.4","time":"2024-03-21T06:51:45.591Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
